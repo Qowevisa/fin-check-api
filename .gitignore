@@ -24,3 +24,5 @@ go.work
 gonuts
 *.db
 bin*
+
+docs/
