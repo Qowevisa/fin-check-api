@@ -8,4 +8,5 @@ api-local: swagger http-server
 	./bin/http-server
 
 swagger:
-	swag init -g ./cmd/http-server/main.go
+	#swag init -g ./cmd/http-server/main.go
+	swag init -d ./cmd/http-server/,./types/,./handlers,./db
