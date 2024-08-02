@@ -5,6 +5,7 @@ import (
 	"encoding/base64"
 	"errors"
 	"log"
+	"strings"
 	"sync"
 	"time"
 )
@@ -24,8 +25,8 @@ func (t Token) IsExpired() bool {
 
 type TokensMapMu struct {
 	Initialized bool
-	Tokmap      map[uint]Token
-	TokmapRev   map[string]Token
+	Tokmap      map[uint]*Token
+	TokmapRev   map[string]*Token
 	Mu          sync.RWMutex
 }
 
@@ -37,15 +38,21 @@ func StartTokens() {
 	if toks.Initialized {
 		return
 	}
-	toks.Tokmap = make(map[uint]Token)
-	toks.TokmapRev = make(map[string]Token)
+	toks.Tokmap = make(map[uint]*Token)
+	toks.TokmapRev = make(map[string]*Token)
 	toks.Initialized = true
 	for {
 		//
 		toks.Mu.Lock()
 		for id, token := range toks.Tokmap {
-			if token.IsExpired() {
+			if token == nil {
+				log.Printf("DAFUQ: 001\n")
 				delete(toks.Tokmap, id)
+			}
+			if token.IsExpired() {
+				val := token.Val
+				delete(toks.Tokmap, id)
+				delete(toks.TokmapRev, val)
 			}
 		}
 		toks.Mu.Unlock()
@@ -59,12 +66,12 @@ var (
 	ERROR_ALREADY_HAVE_TOKEN = errors.New("Already have token")
 )
 
-func GetToken(id uint) (Token, error) {
+func GetToken(id uint) (*Token, error) {
 	toks.Mu.RLock()
 	val, exists := toks.Tokmap[id]
 	toks.Mu.RUnlock()
 	if !exists {
-		return Token{}, ERROR_DONT_HAVE_TOKEN
+		return nil, ERROR_DONT_HAVE_TOKEN
 	}
 	return val, nil
 }
@@ -106,21 +113,28 @@ func generateRandomString(length int) string {
 func generateTokenVal() string {
 	for {
 		tok := generateRandomString(32)
-		if !haveTokenVal(tok) {
-			return tok
+		trimedToken := strings.Trim(tok, "=")
+		if !haveTokenVal(trimedToken) {
+			return trimedToken
 		}
 	}
 }
 
-func AddToken(id uint) (Token, error) {
+func AddToken(id uint) (*Token, error) {
 	toks.Mu.RLock()
 	_, exists := toks.Tokmap[id]
 	toks.Mu.RUnlock()
 	if exists {
-		return Token{}, ERROR_ALREADY_HAVE_TOKEN
+		return nil, ERROR_ALREADY_HAVE_TOKEN
 	}
-	return Token{
-		Val:        generateTokenVal(),
+	val := generateTokenVal()
+	token := &Token{
+		Val:        val,
 		LastActive: time.Now(),
-	}, nil
+	}
+	toks.Mu.Lock()
+	toks.Tokmap[id] = token
+	toks.TokmapRev[val] = token
+	toks.Mu.Unlock()
+	return token, nil
 }
