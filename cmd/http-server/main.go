@@ -38,8 +38,11 @@ func main() {
 	// Routes defined in the routes package
 	routes := r.Group("/api")
 	{
-		routes.POST("/user/register", handlers.UserRegister)
-		routes.POST("/user/login", handlers.UserLogin)
+		userRoutes := routes.Group("/user")
+		{
+			userRoutes.POST("/register", handlers.UserRegister)
+			userRoutes.POST("/login", handlers.UserLogin)
+		}
 	}
 
 	r.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
