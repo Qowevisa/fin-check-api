@@ -36,9 +36,9 @@ func main() {
 	docs.SwaggerInfo.BasePath = "/api"
 
 	// Routes defined in the routes package
-	routes := r.Group("/api")
+	api := r.Group("/api")
 	{
-		userRoutes := routes.Group("/user")
+		userRoutes := api.Group("/user")
 		{
 			userRoutes.POST("/register", handlers.UserRegister)
 			userRoutes.POST("/login", handlers.UserLogin)
