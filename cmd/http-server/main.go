@@ -8,6 +8,8 @@ import (
 
 	"git.qowevisa.me/Qowevisa/gonuts/db"
 	docs "git.qowevisa.me/Qowevisa/gonuts/docs"
+	"git.qowevisa.me/Qowevisa/gonuts/handlers"
+	"git.qowevisa.me/Qowevisa/gonuts/tokens"
 	"github.com/gin-gonic/gin"
 )
 
@@ -36,42 +38,12 @@ func main() {
 	// Routes defined in the routes package
 	routes := r.Group("/api")
 	{
-		routes.GET("/home", getHome)
-		routes.GET("/user/:name", getUser)
+		routes.POST("/user/register", handlers.UserRegister)
+		routes.POST("/user/login", handlers.UserLogin)
 	}
 
 	r.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 
+	go tokens.StartTokens()
 	r.Run(":3000")
-}
-
-// @Summary Says hello
-// @Description Get an account by ID
-// @Tags hello hello2
-// @Accept json
-// @Produce json
-// @Param id path int true "Account ID"
-// @Success 200 {object} Account
-// @Failure 400 {object} ErrorResponse
-// @Router /home [get]
-func getHome(c *gin.Context) {
-	c.JSON(200, gin.H{
-		"message": "Welcome to the API!",
-	})
-}
-
-// @Summary Says hello1
-// @Description Get an account by ID1
-// @Tags hello hello2
-// @Accept json
-// @Produce json
-// @Param id path int true "Account ID"
-// @Success 200 {object} Account
-// @Failure 400 {object} ErrorResponse
-// @Router /accounts/{id} [get]
-func getUser(c *gin.Context) {
-	name := c.Param("name")
-	c.JSON(200, gin.H{
-		"message": "Hello, " + name + "!",
-	})
 }
