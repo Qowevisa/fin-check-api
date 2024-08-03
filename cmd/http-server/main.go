@@ -43,6 +43,11 @@ func main() {
 			userRoutes.POST("/register", handlers.UserRegister)
 			userRoutes.POST("/login", handlers.UserLogin)
 		}
+		cardsRoutes := api.Group("/card")
+		{
+			cardsRoutes.GET("/:id", handlers.CardGetId)
+			cardsRoutes.POST("/add", handlers.CardGetId)
+		}
 	}
 
 	r.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
