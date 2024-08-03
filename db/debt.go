@@ -10,6 +10,7 @@ type Debt struct {
 	gorm.Model
 	CardID   uint
 	Card     *Card
+	Comment  string
 	Value    uint64
 	IOwe     bool
 	Date     time.Time
