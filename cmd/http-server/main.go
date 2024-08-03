@@ -54,6 +54,12 @@ func main() {
 	}
 
 	r.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
+	r.GET("/swagger", func(c *gin.Context) {
+		c.Redirect(301, "/swagger/index.html")
+	})
+	r.GET("/docs", func(c *gin.Context) {
+		c.Redirect(301, "/swagger/index.html")
+	})
 
 	go tokens.StartTokens()
 	r.Run(":3000")
