@@ -42,7 +42,7 @@ func Connect() *gorm.DB {
 		log.Panic(err)
 	}
 	newUDB := gormDB
-	gormDB.AutoMigrate(&Account{})
+	gormDB.AutoMigrate(&Card{})
 	gormDB.AutoMigrate(&Category{})
 	gormDB.AutoMigrate(&Item{})
 	gormDB.AutoMigrate(&ItemPrice{})

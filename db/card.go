@@ -2,8 +2,8 @@ package db
 
 import "gorm.io/gorm"
 
-// Account can be either card or wallet
-type Account struct {
+// Card can be either card or wallet
+type Card struct {
 	gorm.Model
 	Name           string
 	Value          uint64

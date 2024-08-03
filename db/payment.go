@@ -9,8 +9,8 @@ import (
 // For grocery payment
 type Payment struct {
 	gorm.Model
-	AccountID  uint
-	Account    *Account
+	CardID     uint
+	Card       *Card
 	CategoryID uint
 	Category   *Category
 	Name       string
