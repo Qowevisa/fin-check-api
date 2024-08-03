@@ -10,3 +10,6 @@ api-local: swagger http-server
 swagger:
 	#swag init -g ./cmd/http-server/main.go
 	swag init -d ./cmd/http-server/,./types/,./handlers,./db
+
+cloc-api:
+	cloc ./cmd/http-server/ ./db/ ./handlers/ ./types/ ./middleware/ ./utils/ ./tokens/
