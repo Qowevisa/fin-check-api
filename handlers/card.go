@@ -63,6 +63,20 @@ func CardGetId(c *gin.Context) {
 // @Security ApiKeyAuth
 // @Router /card/add [post]
 func CardAdd(c *gin.Context) {
+	userIDAny, exists := c.Get("UserID")
+	if !exists {
+		c.JSON(500, types.ErrorResponse{Message: "Internal error 001"})
+		return
+	}
+
+	var userID uint
+	if userIDVal, ok := userIDAny.(uint); !ok {
+		c.JSON(500, types.ErrorResponse{Message: "Internal error 002"})
+		return
+	} else {
+		userID = userIDVal
+	}
+
 	var card types.DbCard
 	if err := c.ShouldBindJSON(&card); err != nil {
 		c.JSON(400, types.ErrorResponse{Message: "Invalid request"})
@@ -74,6 +88,7 @@ func CardAdd(c *gin.Context) {
 		Value:          card.Value,
 		HaveCreditLine: card.HaveCreditLine,
 		CreditLine:     card.CreditLine,
+		UserID:         userID,
 	}
 	dbc := db.Connect()
 	if err := dbc.Create(&dbCard).Error; err != nil {
