@@ -9,4 +9,6 @@ type Card struct {
 	Value          uint64
 	HaveCreditLine bool
 	CreditLine     uint64
+	UserID         uint
+	User           *User
 }
