@@ -18,10 +18,25 @@ import (
 // @Param card path int true "id"
 // @Success 200 {object} types.DbCard
 // @Failure 400 {object} types.ErrorResponse
+// @Failure 401 {object} types.ErrorResponse
 // @Failure 500 {object} types.ErrorResponse
 // @Security ApiKeyAuth
 // @Router /card/:id [get]
 func CardGetId(c *gin.Context) {
+	userIDAny, exists := c.Get("UserID")
+	if !exists {
+		c.JSON(500, types.ErrorResponse{Message: "Internal error 001"})
+		return
+	}
+
+	var userID uint
+	if userIDVal, ok := userIDAny.(uint); !ok {
+		c.JSON(500, types.ErrorResponse{Message: "Internal error 002"})
+		return
+	} else {
+		userID = userIDVal
+	}
+
 	idStr := c.Param("id")
 	var id uint
 	if idVal, err := strconv.ParseUint(idStr, 10, 32); err != nil {
@@ -41,6 +56,11 @@ func CardGetId(c *gin.Context) {
 		c.JSON(500, types.ErrorResponse{Message: "DAFUQ003"})
 		return
 	}
+	if dbCard.UserID != userID {
+		c.JSON(401, types.ErrorResponse{Message: "This card.id is not yours, you sneaky."})
+		return
+	}
+
 	card := types.DbCard{
 		Name:           dbCard.Name,
 		Value:          dbCard.Value,
