@@ -8,8 +8,9 @@ import (
 
 type Income struct {
 	gorm.Model
-	CardID uint
-	Card   *Card
-	Value  uint64
-	Date   time.Time
+	CardID  uint
+	Card    *Card
+	Value   uint64
+	Comment string
+	Date    time.Time
 }
