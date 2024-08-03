@@ -208,7 +208,6 @@ func CardPutId(c *gin.Context) {
 // @Produce json
 // @Param Authorization header string true "Bearer token"
 // @Param cardID path int true "id"
-// @Param card body types.DbCard true "Card"
 // @Success 200 {object} types.DbCard
 // @Failure 400 {object} types.ErrorResponse
 // @Failure 401 {object} types.ErrorResponse
@@ -253,12 +252,6 @@ func CardDeleteId(c *gin.Context) {
 		c.JSON(401, types.ErrorResponse{Message: "This card.id is not yours, you sneaky."})
 		return
 	}
-	var card types.DbCard
-	if err := c.ShouldBindJSON(&card); err != nil {
-		c.JSON(400, types.ErrorResponse{Message: "Invalid request"})
-		return
-	}
-
 	if err := dbc.Delete(dbCard).Error; err != nil {
 		c.JSON(500, types.ErrorResponse{Message: err.Error()})
 		return
