@@ -39,8 +39,10 @@ func main() {
 		}
 		cardsRoutes := api.Group("/card", middleware.AuthMiddleware())
 		{
-			cardsRoutes.GET("/:id", handlers.CardGetId)
 			cardsRoutes.POST("/add", handlers.CardAdd)
+			cardsRoutes.GET("/:id", handlers.CardGetId)
+			cardsRoutes.PUT("/edit/:id", handlers.CardPutId)
+			cardsRoutes.DELETE("/delete/:id", handlers.CardDeleteId)
 		}
 	}
 
