@@ -11,6 +11,7 @@ import (
 )
 
 type Token struct {
+	Id         uint
 	Val        string
 	LastActive time.Time
 }
@@ -77,6 +78,16 @@ func GetToken(id uint) (*Token, error) {
 	return val, nil
 }
 
+func GetID(token string) (uint, error) {
+	toks.Mu.RLock()
+	val, exists := toks.TokmapRev[token]
+	toks.Mu.RUnlock()
+	if !exists {
+		return 0, ERROR_DONT_HAVE_TOKEN
+	}
+	return val.Id, nil
+}
+
 func haveToken(id uint) bool {
 	toks.Mu.RLock()
 	_, exists := toks.Tokmap[id]
@@ -130,6 +141,7 @@ func AddToken(id uint) (*Token, error) {
 	}
 	val := generateTokenVal()
 	token := &Token{
+		Id:         id,
 		Val:        val,
 		LastActive: time.Now(),
 	}
