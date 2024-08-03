@@ -44,6 +44,13 @@ func main() {
 			cardsRoutes.PUT("/edit/:id", handlers.CardPutId)
 			cardsRoutes.DELETE("/delete/:id", handlers.CardDeleteId)
 		}
+		categoriesRoutes := api.Group("/category", middleware.AuthMiddleware())
+		{
+			categoriesRoutes.POST("/add", handlers.CategoryAdd)
+			categoriesRoutes.GET("/:id", handlers.CategoryGetId)
+			categoriesRoutes.PUT("/edit/:id", handlers.CategoryPutId)
+			categoriesRoutes.DELETE("/delete/:id", handlers.CategoryDeleteId)
+		}
 	}
 
 	r.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
