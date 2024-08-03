@@ -28,7 +28,7 @@ func (c *Card) BeforeSave(tx *gorm.DB) error {
 	}
 
 	var dup Card
-	if err := tx.Find(&dup, Card{Name: c.Name}).Error; err != nil {
+	if err := tx.Find(&dup, Card{Name: c.Name, UserID: c.UserID}).Error; err != nil {
 		return err
 	}
 
