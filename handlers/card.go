@@ -14,10 +14,12 @@ import (
 // @Tags card
 // @Accept json
 // @Produce json
-// @Param card param int true "id"
+// @Param Authorization header string true "Bearer token"
+// @Param card path int true "id"
 // @Success 200 {object} types.DbCard
 // @Failure 400 {object} types.ErrorResponse
 // @Failure 500 {object} types.ErrorResponse
+// @Security ApiKeyAuth
 // @Router /card/:id [get]
 func CardGetId(c *gin.Context) {
 	idStr := c.Param("id")
@@ -53,11 +55,13 @@ func CardGetId(c *gin.Context) {
 // @Tags card
 // @Accept json
 // @Produce json
+// @Param Authorization header string true "Bearer token"
 // @Param card body types.DbCard true "Card"
 // @Success 200 {object} types.Message
 // @Failure 400 {object} types.ErrorResponse
 // @Failure 500 {object} types.ErrorResponse
-// @Router /card/:id [get]
+// @Security ApiKeyAuth
+// @Router /card/add [post]
 func CardAdd(c *gin.Context) {
 	var card types.DbCard
 	if err := c.ShouldBindJSON(&card); err != nil {
@@ -85,4 +89,3 @@ func CardAdd(c *gin.Context) {
 	}
 	c.JSON(200, msg)
 }
-

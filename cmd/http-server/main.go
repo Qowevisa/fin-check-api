@@ -6,6 +6,7 @@ import (
 
 	docs "git.qowevisa.me/Qowevisa/gonuts/docs"
 	"git.qowevisa.me/Qowevisa/gonuts/handlers"
+	"git.qowevisa.me/Qowevisa/gonuts/middleware"
 	"git.qowevisa.me/Qowevisa/gonuts/tokens"
 	"github.com/gin-gonic/gin"
 )
@@ -36,10 +37,10 @@ func main() {
 			userRoutes.POST("/register", handlers.UserRegister)
 			userRoutes.POST("/login", handlers.UserLogin)
 		}
-		cardsRoutes := api.Group("/card")
+		cardsRoutes := api.Group("/card", middleware.AuthMiddleware())
 		{
 			cardsRoutes.GET("/:id", handlers.CardGetId)
-			cardsRoutes.POST("/add", handlers.CardGetId)
+			cardsRoutes.POST("/add", handlers.CardAdd)
 		}
 	}
 
