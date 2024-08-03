@@ -67,12 +67,13 @@ var (
 )
 
 func GetToken(id uint) (*Token, error) {
-	toks.Mu.RLock()
+	toks.Mu.Lock()
+	defer toks.Mu.Unlock()
 	val, exists := toks.Tokmap[id]
-	toks.Mu.RUnlock()
 	if !exists {
 		return nil, ERROR_DONT_HAVE_TOKEN
 	}
+	val.LastActive = time.Now()
 	return val, nil
 }
 
@@ -137,4 +138,15 @@ func AddToken(id uint) (*Token, error) {
 	toks.TokmapRev[val] = token
 	toks.Mu.Unlock()
 	return token, nil
+}
+
+func AmIAllowed(token string) bool {
+	toks.Mu.Lock()
+	defer toks.Mu.Unlock()
+	val, exists := toks.TokmapRev[token]
+	if !exists {
+		return false
+	}
+	val.LastActive = time.Now()
+	return true
 }
