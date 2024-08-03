@@ -1,12 +1,9 @@
 package main
 
 import (
-	"fmt"
-
 	"github.com/swaggo/files"
 	"github.com/swaggo/gin-swagger"
 
-	"git.qowevisa.me/Qowevisa/gonuts/db"
 	docs "git.qowevisa.me/Qowevisa/gonuts/docs"
 	"git.qowevisa.me/Qowevisa/gonuts/handlers"
 	"git.qowevisa.me/Qowevisa/gonuts/tokens"
@@ -28,10 +25,6 @@ import (
 // @host localhost:3000
 // @BasePath /api
 func main() {
-	dbc := db.Connect()
-	if dbc != nil {
-		fmt.Printf("yay\n")
-	}
 	r := gin.Default()
 	docs.SwaggerInfo.BasePath = "/api"
 
