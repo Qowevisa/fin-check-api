@@ -12,6 +12,17 @@ type Account struct {
 	Token string `json:"token" example:"Fvs-MnxiEs5dnqMp2mSDIJigPbiIUs6Snk1xxiqPmUc="`
 }
 
+type Message struct {
+	Message string `json:"message" example:"Success!"`
+}
+
 type ErrorResponse struct {
 	Message string `json:"message" example:"Error: you stink"`
+}
+
+type DbCard struct {
+	Name           string `json:"name" example:"CreditCard"`
+	Value          uint64 `json:"value" example:"1000"`
+	HaveCreditLine bool   `json:"have_credit_line" example:"true"`
+	CreditLine     uint64 `json:"credit_line" example:"500000"`
 }
