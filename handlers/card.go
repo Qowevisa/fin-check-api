@@ -214,7 +214,7 @@ func CardPutId(c *gin.Context) {
 // @Failure 401 {object} types.ErrorResponse
 // @Failure 500 {object} types.ErrorResponse
 // @Security ApiKeyAuth
-// @Router /card/edit/:id [put]
+// @Router /card/delete/:id [delete]
 func CardDeleteId(c *gin.Context) {
 	userIDAny, exists := c.Get("UserID")
 	if !exists {
