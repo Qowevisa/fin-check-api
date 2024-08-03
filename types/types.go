@@ -27,3 +27,12 @@ type DbCard struct {
 	HaveCreditLine bool   `json:"have_credit_line" example:"true"`
 	CreditLine     uint64 `json:"credit_line" example:"500000"`
 }
+
+type DbCategory struct {
+	ID   uint   `json:"id" example:"1"`
+	Name string `json:"name" example:"Moldova"`
+	// Parent is used as a infinite sub-category structure
+	//  Can be 0
+	ParentID uint `json:"parent_id" example:"0"`
+	UserID   uint `json:"user_id" example:"1"`
+}
