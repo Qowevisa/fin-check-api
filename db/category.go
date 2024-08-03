@@ -22,12 +22,14 @@ var (
 )
 
 func (c *Category) BeforeSave(tx *gorm.DB) error {
-	var parent Category
-	if err := tx.Find(&parent, Category{ParentID: c.ParentID, UserID: c.UserID}).Error; err != nil {
-		return err
-	}
-	if parent.ID == 0 {
-		return ERROR_CATEGORY_PARENT_NOT_FOUND
+	if c.ParentID != 0 {
+		var parent Category
+		if err := tx.Find(&parent, Category{ParentID: c.ParentID, UserID: c.UserID}).Error; err != nil {
+			return err
+		}
+		if parent.ID == 0 {
+			return ERROR_CATEGORY_PARENT_NOT_FOUND
+		}
 	}
 	var dup Category
 	if err := tx.Find(&dup, Category{Name: c.Name, UserID: c.UserID}).Error; err != nil {
