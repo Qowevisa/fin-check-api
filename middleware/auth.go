@@ -6,6 +6,7 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
+// Passes UserID with `c.Set("UserID")` as it gets id from token
 func AuthMiddleware() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		authHeader := c.GetHeader("Authorization")
@@ -20,6 +21,14 @@ func AuthMiddleware() gin.HandlerFunc {
 			c.JSON(401, types.ErrorResponse{Message: "Token is invalid"})
 			c.Abort()
 			return
+		}
+
+		if userID, err := tokens.GetID(token); err != nil {
+			c.JSON(401, types.ErrorResponse{Message: "Token is invalid ERR4001"})
+			c.Abort()
+			return
+		} else {
+			c.Set("UserID", userID)
 		}
 
 		c.Next()
