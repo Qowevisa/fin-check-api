@@ -32,20 +32,18 @@ func main() {
 	r := gin.Default()
 	docs.SwaggerInfo.BasePath = "/api"
 	r.Use(cors.New(cors.Config{
-		AllowOrigins:     []string{"http://localhost:3001"},
-		AllowMethods:     []string{"GET", "DELETE", "PUT", "PATCH"},
+		AllowOrigins:     []string{"*"},
+		AllowMethods:     []string{"GET", "DELETE", "PUT", "PATCH", "OPTIONS"},
 		AllowHeaders:     []string{"Origin"},
 		ExposeHeaders:    []string{"Content-Length"},
 		AllowCredentials: true,
-		AllowOriginFunc: func(origin string) bool {
-			return origin == "https://github.com"
-		},
-		MaxAge: 12 * time.Hour,
+		MaxAge:           12 * time.Hour,
 	}))
 
 	// Routes defined in the routes package
 	api := r.Group("/api")
 	{
+		api.GET("/ping", handlers.PingGet)
 		userRoutes := api.Group("/user")
 		{
 			userRoutes.POST("/register", handlers.UserRegister)
