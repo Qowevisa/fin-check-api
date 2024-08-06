@@ -74,5 +74,5 @@ func main() {
 	})
 
 	go tokens.StartTokens()
-	r.Run("127.0.0.1:3000")
+	r.Run(":3000")
 }
