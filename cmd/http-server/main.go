@@ -1,6 +1,8 @@
 package main
 
 import (
+	"time"
+
 	"github.com/swaggo/files"
 	"github.com/swaggo/gin-swagger"
 
@@ -8,6 +10,7 @@ import (
 	"git.qowevisa.me/Qowevisa/gonuts/handlers"
 	"git.qowevisa.me/Qowevisa/gonuts/middleware"
 	"git.qowevisa.me/Qowevisa/gonuts/tokens"
+	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 )
 
@@ -28,6 +31,17 @@ import (
 func main() {
 	r := gin.Default()
 	docs.SwaggerInfo.BasePath = "/api"
+	r.Use(cors.New(cors.Config{
+		AllowOrigins:     []string{"http://localhost:3001"},
+		AllowMethods:     []string{"GET", "DELETE", "PUT", "PATCH"},
+		AllowHeaders:     []string{"Origin"},
+		ExposeHeaders:    []string{"Content-Length"},
+		AllowCredentials: true,
+		AllowOriginFunc: func(origin string) bool {
+			return origin == "https://github.com"
+		},
+		MaxAge: 12 * time.Hour,
+	}))
 
 	// Routes defined in the routes package
 	api := r.Group("/api")
