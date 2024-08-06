@@ -13,3 +13,6 @@ swagger:
 
 cloc-api:
 	cloc ./cmd/http-server/ ./db/ ./handlers/ ./types/ ./middleware/ ./utils/ ./tokens/
+
+install-swag:
+	go install github.com/swaggo/swag/cmd/swag@latest
