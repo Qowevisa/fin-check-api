@@ -16,4 +16,6 @@ type Debt struct {
 	Date     time.Time
 	DateEnd  time.Time
 	Finished bool
+	UserID   uint
+	User     *User
 }

@@ -13,4 +13,6 @@ type Income struct {
 	Value   uint64
 	Comment string
 	Date    time.Time
+	UserID  uint
+	User    *User
 }
