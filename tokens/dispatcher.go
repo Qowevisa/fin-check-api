@@ -49,6 +49,7 @@ func StartTokens() {
 			if token == nil {
 				log.Printf("DAFUQ: 001\n")
 				delete(toks.Tokmap, id)
+				continue
 			}
 			if token.IsExpired() {
 				val := token.Val
