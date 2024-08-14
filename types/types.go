@@ -50,3 +50,12 @@ type DbDebt struct {
 	Finished bool      `json:"finished" example:"false"`
 	UserID   uint      `json:"user_id" example:"1"`
 }
+
+type DbIncome struct {
+	ID      uint      `json:"id" example:"1"`
+	CardID  uint      `json:"card_id" example:"1"`
+	Comment string    `json:"comment" example:"pizza"`
+	Value   uint64    `json:"value" example:"20000"`
+	Date    time.Time `json:"date" example:"29/11/2001 12:00"`
+	UserID  uint      `json:"user_id" example:"1"`
+}
