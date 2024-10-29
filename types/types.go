@@ -59,3 +59,9 @@ type DbIncome struct {
 	Date    time.Time `json:"date" example:"29/11/2001 12:00"`
 	UserID  uint      `json:"user_id" example:"1"`
 }
+
+type DbType struct {
+	Name    string `json:"name" example:"Medicine"`
+	Comment string `json:"comment" example:""`
+	Color   string `json:"color" example:"red"`
+}
