@@ -7,6 +7,7 @@ type Item struct {
 	Name        string
 	MetricType  string
 	MetricValue uint64
+	Comment     string
 	//
 	CategoryID uint
 	Category   *Category
