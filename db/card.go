@@ -17,6 +17,21 @@ type Card struct {
 	User           *User
 }
 
+// Implements db.UserIdentifiable:1
+func (c Card) GetID() uint {
+	return c.ID
+}
+
+// Implements db.UserIdentifiable:2
+func (c Card) GetUserID() uint {
+	return c.UserID
+}
+
+// Implements db.UserIdentifiable:3
+func (c *Card) SetUserID(id uint) {
+	c.UserID = id
+}
+
 var (
 	ERROR_CARD_NAME_EMPTY      = errors.New("Card's name can't be empty")
 	ERROR_CARD_NAME_NOT_UNIQUE = errors.New("Card's name have to be unique for user")
