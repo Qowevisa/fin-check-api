@@ -61,6 +61,7 @@ type DbIncome struct {
 }
 
 type DbType struct {
+	ID      uint   `json:"id" example:"1"`
 	Name    string `json:"name" example:"Medicine"`
 	Comment string `json:"comment" example:""`
 	Color   string `json:"color" example:"red"`
