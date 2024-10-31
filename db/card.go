@@ -47,7 +47,7 @@ func (c *Card) BeforeSave(tx *gorm.DB) error {
 		return err
 	}
 
-	if dup.ID != 0 {
+	if c.ID != dup.ID && dup.ID != 0 {
 		return ERROR_CARD_NAME_NOT_UNIQUE
 	}
 
