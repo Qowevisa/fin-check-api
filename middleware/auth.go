@@ -1,6 +1,8 @@
 package middleware
 
 import (
+	"strings"
+
 	"git.qowevisa.me/Qowevisa/gonuts/tokens"
 	"git.qowevisa.me/Qowevisa/gonuts/types"
 	"github.com/gin-gonic/gin"
@@ -17,6 +19,10 @@ func AuthMiddleware() gin.HandlerFunc {
 		}
 
 		token := authHeader
+		if strings.Index(token, "Bearer ") == 0 {
+			token = strings.Split(token, " ")[1]
+		}
+
 		if !tokens.AmIAllowed(token) {
 			c.JSON(401, types.ErrorResponse{Message: "Token is invalid"})
 			c.Abort()
