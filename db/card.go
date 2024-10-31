@@ -33,8 +33,8 @@ func (c *Card) SetUserID(id uint) {
 }
 
 var (
-	ERROR_CARD_NAME_EMPTY      = errors.New("Card's name can't be empty")
-	ERROR_CARD_NAME_NOT_UNIQUE = errors.New("Card's name have to be unique for user")
+	ERROR_CARD_NAME_EMPTY      = errors.New("The 'Name' field for 'Card' cannot be empty")
+	ERROR_CARD_NAME_NOT_UNIQUE = errors.New("The 'Name' field for 'Card' have to be unique for user")
 )
 
 func (c *Card) BeforeSave(tx *gorm.DB) error {
