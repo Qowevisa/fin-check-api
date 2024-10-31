@@ -15,6 +15,21 @@ type Type struct {
 	User    *User
 }
 
+// Implements db.UserIdentifiable:1
+func (t Type) GetID() uint {
+	return t.ID
+}
+
+// Implements db.UserIdentifiable:2
+func (t Type) GetUserID() uint {
+	return t.UserID
+}
+
+// Implements db.UserIdentifiable:3
+func (t *Type) SetUserID(id uint) {
+	t.UserID = id
+}
+
 var (
 	ERROR_TYPE_NAME_EMPTY      = errors.New("The 'Name' field of 'Type' cannot be empty")
 	ERROR_TYPE_NAME_NOT_UNIQUE = errors.New("The 'Name' field of 'Type' have to be unique for user")
@@ -35,8 +50,4 @@ func (t *Type) BeforeSave(tx *gorm.DB) error {
 	}
 
 	return nil
-}
-
-func (t *Type) GetID() uint {
-	return t.ID
 }
