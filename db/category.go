@@ -16,6 +16,21 @@ type Category struct {
 	User     *User
 }
 
+// Implements db.UserIdentifiable:1
+func (c Category) GetID() uint {
+	return c.ID
+}
+
+// Implements db.UserIdentifiable:2
+func (c Category) GetUserID() uint {
+	return c.UserID
+}
+
+// Implements db.UserIdentifiable:3
+func (c *Category) SetUserID(id uint) {
+	c.UserID = id
+}
+
 var (
 	ERROR_CATEGORY_PARENT_NOT_FOUND  = errors.New("Can't find Category with ParentID for user")
 	ERROR_CATEGORY_NAME_NOT_UNIQUE   = errors.New("Name for Category have to be unique for user")
