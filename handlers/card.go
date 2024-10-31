@@ -1,12 +1,8 @@
 package handlers
 
 import (
-	"fmt"
-	"strconv"
-
 	"git.qowevisa.me/Qowevisa/gonuts/db"
 	"git.qowevisa.me/Qowevisa/gonuts/types"
-	"git.qowevisa.me/Qowevisa/gonuts/utils"
 	"github.com/gin-gonic/gin"
 )
 
@@ -24,51 +20,15 @@ import (
 // @Security ApiKeyAuth
 // @Router /card/:id [get]
 func CardGetId(c *gin.Context) {
-	userIDAny, exists := c.Get("UserID")
-	if !exists {
-		c.JSON(500, types.ErrorResponse{Message: "Internal error 001"})
-		return
-	}
-
-	var userID uint
-	if userIDVal, ok := userIDAny.(uint); !ok {
-		c.JSON(500, types.ErrorResponse{Message: "Internal error 002"})
-		return
-	} else {
-		userID = userIDVal
-	}
-
-	idStr := c.Param("id")
-	var id uint
-	if idVal, err := strconv.ParseUint(idStr, 10, 32); err != nil {
-		c.JSON(400, types.ErrorResponse{Message: "Invalid request"})
-		return
-	} else {
-		id = uint(idVal)
-	}
-
-	var dbCard db.Card
-	dbc := db.Connect()
-	if err := dbc.Find(&dbCard, id).Error; err != nil {
-		c.JSON(500, types.ErrorResponse{Message: err.Error()})
-		return
-	}
-	if dbCard.ID == 0 {
-		c.JSON(500, types.ErrorResponse{Message: "DAFUQ003"})
-		return
-	}
-	if dbCard.UserID != userID {
-		c.JSON(401, types.ErrorResponse{Message: "This card.id is not yours, you sneaky."})
-		return
-	}
-
-	card := types.DbCard{
-		Name:           dbCard.Name,
-		Value:          dbCard.Value,
-		HaveCreditLine: dbCard.HaveCreditLine,
-		CreditLine:     dbCard.CreditLine,
-	}
-	c.JSON(200, card)
+	GetHandler(func(inp *db.Card) types.DbCard {
+		return types.DbCard{
+			ID:             inp.ID,
+			Name:           inp.Name,
+			Value:          inp.Value,
+			HaveCreditLine: inp.HaveCreditLine,
+			CreditLine:     inp.CreditLine,
+		}
+	})(c)
 }
 
 // @Summary Get card by id
@@ -84,46 +44,13 @@ func CardGetId(c *gin.Context) {
 // @Security ApiKeyAuth
 // @Router /card/add [post]
 func CardAdd(c *gin.Context) {
-	userIDAny, exists := c.Get("UserID")
-	if !exists {
-		c.JSON(500, types.ErrorResponse{Message: "Internal error 001"})
-		return
-	}
-
-	var userID uint
-	if userIDVal, ok := userIDAny.(uint); !ok {
-		c.JSON(500, types.ErrorResponse{Message: "Internal error 002"})
-		return
-	} else {
-		userID = userIDVal
-	}
-
-	var card types.DbCard
-	if err := c.ShouldBindJSON(&card); err != nil {
-		c.JSON(400, types.ErrorResponse{Message: "Invalid request"})
-		return
-	}
-
-	dbCard := &db.Card{
-		Name:           card.Name,
-		Value:          card.Value,
-		HaveCreditLine: card.HaveCreditLine,
-		CreditLine:     card.CreditLine,
-		UserID:         userID,
-	}
-	dbc := db.Connect()
-	if err := dbc.Create(&dbCard).Error; err != nil {
-		c.JSON(500, types.ErrorResponse{Message: err.Error()})
-		return
-	}
-	if dbCard.ID == 0 {
-		c.JSON(500, types.ErrorResponse{Message: "DAFUQ004"})
-		return
-	}
-	msg := types.Message{
-		Message: fmt.Sprintf("Card with id %d was successfully created!", dbCard.ID),
-	}
-	c.JSON(200, msg)
+	card := &db.Card{}
+	CreateHandler(card, func(src types.DbCard, dst *db.Card) {
+		dst.Name = src.Name
+		dst.Value = src.Value
+		dst.HaveCreditLine = src.HaveCreditLine
+		dst.CreditLine = src.CreditLine
+	})(c)
 }
 
 // @Summary Edit card by id
@@ -141,64 +68,23 @@ func CardAdd(c *gin.Context) {
 // @Security ApiKeyAuth
 // @Router /card/edit/:id [put]
 func CardPutId(c *gin.Context) {
-	userIDAny, exists := c.Get("UserID")
-	if !exists {
-		c.JSON(500, types.ErrorResponse{Message: "Internal error 001"})
-		return
-	}
-
-	var userID uint
-	if userIDVal, ok := userIDAny.(uint); !ok {
-		c.JSON(500, types.ErrorResponse{Message: "Internal error 002"})
-		return
-	} else {
-		userID = userIDVal
-	}
-
-	idStr := c.Param("id")
-	var id uint
-	if idVal, err := strconv.ParseUint(idStr, 10, 32); err != nil {
-		c.JSON(400, types.ErrorResponse{Message: "Invalid request"})
-		return
-	} else {
-		id = uint(idVal)
-	}
-
-	var dbCard db.Card
-	dbc := db.Connect()
-	if err := dbc.Find(&dbCard, id).Error; err != nil {
-		c.JSON(500, types.ErrorResponse{Message: err.Error()})
-		return
-	}
-	if dbCard.ID == 0 {
-		c.JSON(500, types.ErrorResponse{Message: "DAFUQ003"})
-		return
-	}
-	if dbCard.UserID != userID {
-		c.JSON(401, types.ErrorResponse{Message: "This card.id is not yours, you sneaky."})
-		return
-	}
-	var card types.DbCard
-	if err := c.ShouldBindJSON(&card); err != nil {
-		c.JSON(400, types.ErrorResponse{Message: "Invalid request"})
-		return
-	}
-
-	utils.MergeNonZeroFields(card, dbCard)
-
-	if err := dbc.Save(dbCard).Error; err != nil {
-		c.JSON(500, types.ErrorResponse{Message: err.Error()})
-		return
-	}
-
-	ret := types.DbCard{
-		ID:             dbCard.ID,
-		Name:           dbCard.Name,
-		Value:          dbCard.Value,
-		HaveCreditLine: dbCard.HaveCreditLine,
-		CreditLine:     dbCard.CreditLine,
-	}
-	c.JSON(200, ret)
+	UpdateHandler(
+		// Filter used to apply only needed changes from srt to dst before updating dst
+		func(src types.DbCard, dst *db.Card) {
+			dst.Name = src.Name
+			dst.Value = src.Value
+			dst.CreditLine = src.CreditLine
+			dst.HaveCreditLine = src.HaveCreditLine
+		},
+		func(inp *db.Card) types.DbCard {
+			return types.DbCard{
+				ID:             inp.ID,
+				Name:           inp.Name,
+				Value:          inp.Value,
+				HaveCreditLine: inp.HaveCreditLine,
+				CreditLine:     inp.CreditLine,
+			}
+		})(c)
 }
 
 // @Summary Delete card by id
@@ -215,54 +101,5 @@ func CardPutId(c *gin.Context) {
 // @Security ApiKeyAuth
 // @Router /card/delete/:id [delete]
 func CardDeleteId(c *gin.Context) {
-	userIDAny, exists := c.Get("UserID")
-	if !exists {
-		c.JSON(500, types.ErrorResponse{Message: "Internal error 001"})
-		return
-	}
-
-	var userID uint
-	if userIDVal, ok := userIDAny.(uint); !ok {
-		c.JSON(500, types.ErrorResponse{Message: "Internal error 002"})
-		return
-	} else {
-		userID = userIDVal
-	}
-
-	idStr := c.Param("id")
-	var id uint
-	if idVal, err := strconv.ParseUint(idStr, 10, 32); err != nil {
-		c.JSON(400, types.ErrorResponse{Message: "Invalid request"})
-		return
-	} else {
-		id = uint(idVal)
-	}
-
-	var dbCard db.Card
-	dbc := db.Connect()
-	if err := dbc.Find(&dbCard, id).Error; err != nil {
-		c.JSON(500, types.ErrorResponse{Message: err.Error()})
-		return
-	}
-	if dbCard.ID == 0 {
-		c.JSON(500, types.ErrorResponse{Message: "DAFUQ003"})
-		return
-	}
-	if dbCard.UserID != userID {
-		c.JSON(401, types.ErrorResponse{Message: "This card.id is not yours, you sneaky."})
-		return
-	}
-	if err := dbc.Delete(dbCard).Error; err != nil {
-		c.JSON(500, types.ErrorResponse{Message: err.Error()})
-		return
-	}
-
-	ret := types.DbCard{
-		ID:             dbCard.ID,
-		Name:           dbCard.Name,
-		Value:          dbCard.Value,
-		HaveCreditLine: dbCard.HaveCreditLine,
-		CreditLine:     dbCard.CreditLine,
-	}
-	c.JSON(200, ret)
+	DeleteHandler[*db.Card]()(c)
 }
