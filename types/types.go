@@ -47,7 +47,6 @@ type DbDebt struct {
 	Date     time.Time `json:"date" example:"29/11/2001 12:00"`
 	DateEnd  time.Time `json:"date_end" example:"29/12/2001 12:00"`
 	Finished bool      `json:"finished" example:"false"`
-	UserID   uint      `json:"user_id" example:"1"`
 }
 
 type DbIncome struct {
