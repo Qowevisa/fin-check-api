@@ -13,7 +13,7 @@ type Payment struct {
 	Card       *Card
 	CategoryID uint
 	Category   *Category
-	Name       string
+	Title      string
 	Descr      string
 	Note       string
 	Items      []ItemBought
