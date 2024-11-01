@@ -10,7 +10,7 @@ import (
 type Card struct {
 	gorm.Model
 	Name           string
-	Value          uint64
+	Balance        uint64
 	HaveCreditLine bool
 	CreditLine     uint64
 	UserID         uint

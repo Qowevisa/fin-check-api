@@ -24,7 +24,7 @@ func CardGetId(c *gin.Context) {
 		return types.DbCard{
 			ID:             inp.ID,
 			Name:           inp.Name,
-			Value:          inp.Value,
+			Balance:        inp.Balance,
 			HaveCreditLine: inp.HaveCreditLine,
 			CreditLine:     inp.CreditLine,
 		}
@@ -47,7 +47,7 @@ func CardAdd(c *gin.Context) {
 	card := &db.Card{}
 	CreateHandler(card, func(src types.DbCard, dst *db.Card) {
 		dst.Name = src.Name
-		dst.Value = src.Value
+		dst.Balance = src.Balance
 		dst.HaveCreditLine = src.HaveCreditLine
 		dst.CreditLine = src.CreditLine
 	})(c)
@@ -72,7 +72,7 @@ func CardPutId(c *gin.Context) {
 		// Filter used to apply only needed changes from srt to dst before updating dst
 		func(src types.DbCard, dst *db.Card) {
 			dst.Name = src.Name
-			dst.Value = src.Value
+			dst.Balance = src.Balance
 			dst.CreditLine = src.CreditLine
 			dst.HaveCreditLine = src.HaveCreditLine
 		},
@@ -80,7 +80,7 @@ func CardPutId(c *gin.Context) {
 			return types.DbCard{
 				ID:             inp.ID,
 				Name:           inp.Name,
-				Value:          inp.Value,
+				Balance:        inp.Balance,
 				HaveCreditLine: inp.HaveCreditLine,
 				CreditLine:     inp.CreditLine,
 			}

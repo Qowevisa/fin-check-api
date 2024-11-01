@@ -25,7 +25,7 @@ type ErrorResponse struct {
 type DbCard struct {
 	ID             uint   `json:"id" example:"1"`
 	Name           string `json:"name" example:"CreditCard"`
-	Value          uint64 `json:"value" example:"1000"`
+	Balance        uint64 `json:"balance" example:"1000"`
 	HaveCreditLine bool   `json:"have_credit_line" example:"true"`
 	CreditLine     uint64 `json:"credit_line" example:"500000"`
 }
