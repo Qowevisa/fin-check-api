@@ -13,7 +13,7 @@ type ItemPrice struct {
 	Item      *Item
 	Price     uint64
 	ValidFrom time.Time
-	IsValid   bool `gorm:"default:true"`
+	ValidTo   time.Time
 }
 
 var (
