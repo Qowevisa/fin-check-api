@@ -19,6 +19,9 @@ type Item struct {
 	Prices         []ItemPrice
 	CurrentPriceID uint
 	CurrentPrice   *ItemPrice
+	//
+	TypeID uint
+	Type   *Type
 }
 
 func GetItem(id uint, preloadPrices bool) (*Item, error) {
