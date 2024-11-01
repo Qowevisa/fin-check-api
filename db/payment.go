@@ -13,6 +13,8 @@ type Payment struct {
 	Card       *Card
 	CategoryID uint
 	Category   *Category
+	UserID     uint
+	User       *User
 	Title      string
 	Descr      string
 	Note       string
