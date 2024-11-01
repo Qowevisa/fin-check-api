@@ -5,9 +5,9 @@ import "gorm.io/gorm"
 type Item struct {
 	gorm.Model
 	Name        string
-	MetricType  string
-	MetricValue uint64
 	Comment     string
+	MetricType  uint8
+	MetricValue uint64
 	//
 	CategoryID uint
 	Category   *Category
