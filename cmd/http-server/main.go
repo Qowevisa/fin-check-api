@@ -6,10 +6,10 @@ import (
 	"github.com/swaggo/files"
 	"github.com/swaggo/gin-swagger"
 
-	docs "git.qowevisa.me/Qowevisa/gonuts/docs"
-	"git.qowevisa.me/Qowevisa/gonuts/handlers"
-	"git.qowevisa.me/Qowevisa/gonuts/middleware"
-	"git.qowevisa.me/Qowevisa/gonuts/tokens"
+	docs "git.qowevisa.me/Qowevisa/fin-check-api/docs"
+	"git.qowevisa.me/Qowevisa/fin-check-api/handlers"
+	"git.qowevisa.me/Qowevisa/fin-check-api/middleware"
+	"git.qowevisa.me/Qowevisa/fin-check-api/tokens"
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 )

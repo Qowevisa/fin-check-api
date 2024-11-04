@@ -1,4 +1,4 @@
-module git.qowevisa.me/Qowevisa/gonuts
+module git.qowevisa.me/Qowevisa/fin-check-api
 
 go 1.20
 

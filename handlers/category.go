@@ -1,8 +1,8 @@
 package handlers
 
 import (
-	"git.qowevisa.me/Qowevisa/gonuts/db"
-	"git.qowevisa.me/Qowevisa/gonuts/types"
+	"git.qowevisa.me/Qowevisa/fin-check-api/db"
+	"git.qowevisa.me/Qowevisa/fin-check-api/types"
 	"github.com/gin-gonic/gin"
 )
 

@@ -3,8 +3,8 @@ package middleware
 import (
 	"strings"
 
-	"git.qowevisa.me/Qowevisa/gonuts/tokens"
-	"git.qowevisa.me/Qowevisa/gonuts/types"
+	"git.qowevisa.me/Qowevisa/fin-check-api/tokens"
+	"git.qowevisa.me/Qowevisa/fin-check-api/types"
 	"github.com/gin-gonic/gin"
 )
 

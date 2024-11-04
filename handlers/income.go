@@ -4,9 +4,9 @@ import (
 	"fmt"
 	"strconv"
 
-	"git.qowevisa.me/Qowevisa/gonuts/db"
-	"git.qowevisa.me/Qowevisa/gonuts/types"
-	"git.qowevisa.me/Qowevisa/gonuts/utils"
+	"git.qowevisa.me/Qowevisa/fin-check-api/db"
+	"git.qowevisa.me/Qowevisa/fin-check-api/types"
+	"git.qowevisa.me/Qowevisa/fin-check-api/utils"
 	"github.com/gin-gonic/gin"
 )
 
