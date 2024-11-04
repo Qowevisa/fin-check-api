@@ -64,3 +64,13 @@ type DbType struct {
 	Comment string `json:"comment" example:""`
 	Color   string `json:"color" example:"red"`
 }
+
+type DbPayment struct {
+	ID         uint      `json:"id" example:"1"`
+	CardID     uint      `json:"card_id" example:"1"`
+	CategoryID uint      `json:"category_id" example:"1"`
+	Title      string    `json:"title" example:"Veggies"`
+	Descr      string    `json:"description" example:""`
+	Note       string    `json:"not" example:"I'm a teapot"`
+	Date       time.Time `json:"date" example:"29/11/2001 12:00"`
+}
