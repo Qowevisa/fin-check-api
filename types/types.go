@@ -10,8 +10,9 @@ type User struct {
 
 // User Account
 type Account struct {
-	ID    uint   `json:"id" example:"1"`
-	Token string `json:"token" example:"Fvs-MnxiEs5dnqMp2mSDIJigPbiIUs6Snk1xxiqPmUc="`
+	ID       uint   `json:"id" example:"1"`
+	Token    string `json:"token" example:"Fvs-MnxiEs5dnqMp2mSDIJigPbiIUs6Snk1xxiqPmUc"`
+	Username string `json:"username" example:"testUser"`
 }
 
 type Message struct {
