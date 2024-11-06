@@ -44,6 +44,7 @@ func main() {
 	api := r.Group("/api")
 	{
 		api.GET("/ping", handlers.PingGet)
+		api.GET("/authping", middleware.AuthMiddleware(), handlers.PingGet)
 		userRoutes := api.Group("/user")
 		{
 			userRoutes.POST("/register", handlers.UserRegister)
