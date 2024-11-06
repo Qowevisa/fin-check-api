@@ -3,6 +3,7 @@ package handlers
 import (
 	"log"
 
+	"git.qowevisa.me/Qowevisa/fin-check-api/consts"
 	"git.qowevisa.me/Qowevisa/fin-check-api/db"
 	"git.qowevisa.me/Qowevisa/fin-check-api/tokens"
 	"git.qowevisa.me/Qowevisa/fin-check-api/types"
@@ -47,9 +48,11 @@ func UserRegister(c *gin.Context) {
 		}
 		token1 = token
 	}
+	c.SetCookie(consts.COOKIE_SESSION, token1.Val, 3600, "/", "localhost", false, true)
 	acc := types.Account{
-		ID:    dbUser.ID,
-		Token: token1.Val,
+		ID:       dbUser.ID,
+		Token:    token1.Val,
+		Username: dbUser.Username,
 	}
 	c.JSON(200, acc)
 }
@@ -82,7 +85,7 @@ func UserLogin(c *gin.Context) {
 		return
 	}
 	if foundUser.ID == 0 {
-		c.JSON(500, types.ErrorResponse{Message: "Credentials are incorrect"})
+		c.JSON(400, types.ErrorResponse{Message: "Credentials are incorrect"})
 		return
 	}
 	var token1 *tokens.Token
@@ -97,9 +100,13 @@ func UserLogin(c *gin.Context) {
 		}
 		token1 = token
 	}
+	c.SetCookie(consts.COOKIE_SESSION, token1.Val, 3600, "/", "localhost", false, true)
 	acc := types.Account{
-		ID:    foundUser.ID,
-		Token: token1.Val,
+		ID:       foundUser.ID,
+		Token:    token1.Val,
+		Username: dbUser.Username,
 	}
 	c.JSON(200, acc)
 }
+
+func isSessionTokenForUserInvalid(userID uint) {}
