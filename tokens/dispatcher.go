@@ -138,7 +138,7 @@ func AddToken(id uint) (*Token, error) {
 	_, exists := toks.Tokmap[id]
 	toks.Mu.RUnlock()
 	if exists {
-		return nil, ERROR_ALREADY_HAVE_TOKEN
+		// return nil, ERROR_ALREADY_HAVE_TOKEN
 	}
 	val := generateTokenVal()
 	token := &Token{
