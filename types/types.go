@@ -74,3 +74,8 @@ type DbPayment struct {
 	Note       string    `json:"not" example:"I'm a teapot"`
 	Date       time.Time `json:"date" example:"29/11/2001 12:00"`
 }
+
+type Session struct {
+	ID     string `json:"id"`
+	UserID uint   `json:"user_id" example:"1"`
+}
