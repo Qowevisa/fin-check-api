@@ -48,6 +48,11 @@ func UserRegister(c *gin.Context) {
 		}
 		token1 = token
 	}
+	err := tokens.CreateSessionFromToken(token1.Val, dbUser.ID)
+	if err != nil {
+		log.Printf("tokens.CreateSessionFromToken: %v\n", err)
+		c.JSON(500, types.ErrorResponse{Message: "ERROR: 1000"})
+	}
 	c.SetCookie(consts.COOKIE_SESSION, token1.Val, 3600, "/", "localhost", false, true)
 	acc := types.Account{
 		ID:       dbUser.ID,
@@ -99,6 +104,11 @@ func UserLogin(c *gin.Context) {
 			return
 		}
 		token1 = token
+	}
+	err := tokens.CreateSessionFromToken(token1.Val, foundUser.ID)
+	if err != nil {
+		log.Printf("tokens.CreateSessionFromToken: %v\n", err)
+		c.JSON(500, types.ErrorResponse{Message: "ERROR: 1000"})
 	}
 	c.SetCookie(consts.COOKIE_SESSION, token1.Val, 3600, "/", "localhost", false, true)
 	acc := types.Account{
