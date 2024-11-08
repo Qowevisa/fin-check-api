@@ -24,5 +24,6 @@ go.work
 gonuts
 *.db
 bin*
+*.log
 
 docs/
