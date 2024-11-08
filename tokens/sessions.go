@@ -2,19 +2,15 @@ package tokens
 
 import (
 	"crypto/sha256"
+	"encoding/base64"
 	"log"
 	"time"
 
 	"git.qowevisa.me/Qowevisa/fin-check-api/db"
 )
 
-func getSalt() []byte {
-	return []byte("w40DJV3v1flySvFdxHWbBSJsIOaakkVs5FG7brq4oi1#nEz2fEZxpUfyBwkkww7f")
-}
-
 func CreateSessionFromToken(token string, userID uint) error {
-	salt := getSalt()
-	sessionID := sha256.New().Sum(append(salt, []byte(token)...))
+	sessionID := getSessionIDFromToken(token)
 	dbc := db.Connect()
 	session := &db.Session{
 		ID:       string(sessionID),
@@ -28,11 +24,10 @@ func CreateSessionFromToken(token string, userID uint) error {
 }
 
 func ValidateSessionToken(token string) bool {
-	salt := getSalt()
-	sessionID := sha256.New().Sum(append(salt, []byte(token)...))
+	sessionID := getSessionIDFromToken(token)
 	dbc := db.Connect()
 	session := &db.Session{}
-	if err := dbc.Find(session, sessionID).Error; err != nil {
+	if err := dbc.Debug().Find(session, db.Session{ID: sessionID}).Error; err != nil {
 		log.Printf("DBERROR: %v\n", err)
 		return false
 	}
@@ -47,12 +42,17 @@ func ValidateSessionToken(token string) bool {
 }
 
 func GetSession(token string) (*db.Session, error) {
-	salt := getSalt()
-	sessionID := sha256.New().Sum(append(salt, []byte(token)...))
+	sessionID := getSessionIDFromToken(token)
 	dbc := db.Connect()
 	session := &db.Session{}
-	if err := dbc.Find(session, sessionID).Error; err != nil {
+	if err := dbc.Find(session, db.Session{ID: sessionID}).Error; err != nil {
 		return nil, err
 	}
 	return session, nil
+}
+
+func getSessionIDFromToken(token string) string {
+	salt := []byte("w40DJV3v1flySvFdxHWbBSJsIOaakkVs5FG7brq4oi1#nEz2fEZxpUfyBwkkww7f")
+	bytes := sha256.New().Sum(append(salt, []byte(token)...))
+	return base64.URLEncoding.EncodeToString(bytes)
 }
