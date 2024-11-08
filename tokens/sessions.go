@@ -27,7 +27,7 @@ func ValidateSessionToken(token string) bool {
 	sessionID := getSessionIDFromToken(token)
 	dbc := db.Connect()
 	session := &db.Session{}
-	if err := dbc.Debug().Find(session, db.Session{ID: sessionID}).Error; err != nil {
+	if err := dbc.Find(session, db.Session{ID: sessionID}).Error; err != nil {
 		log.Printf("DBERROR: %v\n", err)
 		return false
 	}
