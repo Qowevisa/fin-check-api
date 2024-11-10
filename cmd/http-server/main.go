@@ -54,6 +54,7 @@ func main() {
 		{
 			cardsRoutes.POST("/add", handlers.CardAdd)
 			cardsRoutes.GET("/:id", handlers.CardGetId)
+			cardsRoutes.GET("/all", handlers.CardGetAll)
 			cardsRoutes.PUT("/edit/:id", handlers.CardPutId)
 			cardsRoutes.DELETE("/delete/:id", handlers.CardDeleteId)
 		}
