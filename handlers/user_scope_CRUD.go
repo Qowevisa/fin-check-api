@@ -2,6 +2,7 @@ package handlers
 
 import (
 	"fmt"
+	"log"
 
 	"git.qowevisa.me/Qowevisa/fin-check-api/db"
 	"git.qowevisa.me/Qowevisa/fin-check-api/types"
@@ -58,6 +59,7 @@ func CreateHandler[T db.UserIdentifiable, R any](entity T, applyChanges func(src
 
 		var updates R
 		if err := c.ShouldBindJSON(&updates); err != nil {
+			log.Printf("err is %v\n", err)
 			c.JSON(400, types.ErrorResponse{Message: "Invalid request"})
 			return
 		}
