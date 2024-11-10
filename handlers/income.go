@@ -130,7 +130,7 @@ func IncomeAdd(c *gin.Context) {
 		return
 	}
 	msg := types.Message{
-		Message: fmt.Sprintf("Income with id %d was successfully created!", dbIncome.ID),
+		Info: fmt.Sprintf("Income with id %d was successfully created!", dbIncome.ID),
 	}
 	c.JSON(200, msg)
 }

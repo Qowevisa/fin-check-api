@@ -70,7 +70,7 @@ func CreateHandler[T db.UserIdentifiable, R any](entity T, applyChanges func(src
 			return
 		}
 
-		c.JSON(200, types.Message{Message: fmt.Sprintf("Entity created with ID %d", entity.GetID())})
+		c.JSON(200, types.Message{Info: fmt.Sprintf("Entity created with ID %d", entity.GetID())})
 	}
 }
 
@@ -166,6 +166,6 @@ func DeleteHandler[T db.UserIdentifiable]() gin.HandlerFunc {
 			return
 		}
 
-		c.JSON(200, types.Message{Message: fmt.Sprintf("Entity with ID %d deleted", entity.GetID())})
+		c.JSON(200, types.Message{Info: fmt.Sprintf("Entity with ID %d deleted", entity.GetID())})
 	}
 }

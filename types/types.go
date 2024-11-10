@@ -16,7 +16,7 @@ type Account struct {
 }
 
 type Message struct {
-	Message string `json:"message" example:"Success!"`
+	Info string `json:"info" example:"Success!"`
 }
 
 type ErrorResponse struct {
