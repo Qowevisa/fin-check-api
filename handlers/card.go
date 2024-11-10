@@ -6,6 +6,16 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
+var cardTransform func(inp *db.Card) types.DbCard = func(inp *db.Card) types.DbCard {
+	return types.DbCard{
+		ID:             inp.ID,
+		Name:           inp.Name,
+		Balance:        inp.Balance,
+		HaveCreditLine: inp.HaveCreditLine,
+		CreditLine:     inp.CreditLine,
+	}
+}
+
 // @Summary Get card by id
 // @Description Get card by id
 // @Tags card
@@ -20,15 +30,37 @@ import (
 // @Security ApiKeyAuth
 // @Router /card/:id [get]
 func CardGetId(c *gin.Context) {
-	GetHandler(func(inp *db.Card) types.DbCard {
-		return types.DbCard{
-			ID:             inp.ID,
-			Name:           inp.Name,
-			Balance:        inp.Balance,
-			HaveCreditLine: inp.HaveCreditLine,
-			CreditLine:     inp.CreditLine,
-		}
-	})(c)
+	GetHandler(cardTransform)(c)
+}
+
+// @Summary Get all cards for user
+// @Description Get all cards for user
+// @Tags card
+// @Produce json
+// @Param Authorization header string true "Bearer token"
+// @Success 200 {object} []types.DbCard
+// @Failure 401 {object} types.ErrorResponse
+// @Failure 500 {object} types.ErrorResponse
+// @Security ApiKeyAuth
+// @Router /card/all [get]
+func CardGetAll(c *gin.Context) {
+	userID, err := GetUserID(c)
+	if err != nil {
+		c.JSON(500, types.ErrorResponse{Message: err.Error()})
+		return
+	}
+	dbc := db.Connect()
+	var entities []*db.Card
+	if err := dbc.Find(&entities, db.Card{UserID: userID}).Error; err != nil {
+		c.JSON(500, types.ErrorResponse{Message: err.Error()})
+		return
+	}
+
+	var ret []types.DbCard
+	for _, entity := range entities {
+		ret = append(ret, cardTransform(entity))
+	}
+	c.JSON(200, ret)
 }
 
 // @Summary Get card by id
