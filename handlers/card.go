@@ -108,15 +108,7 @@ func CardPutId(c *gin.Context) {
 			dst.CreditLine = src.CreditLine
 			dst.HaveCreditLine = src.HaveCreditLine
 		},
-		func(inp *db.Card) types.DbCard {
-			return types.DbCard{
-				ID:             inp.ID,
-				Name:           inp.Name,
-				Balance:        inp.Balance,
-				HaveCreditLine: inp.HaveCreditLine,
-				CreditLine:     inp.CreditLine,
-			}
-		})(c)
+		cardTransform)(c)
 }
 
 // @Summary Delete card by id
