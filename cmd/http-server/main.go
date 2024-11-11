@@ -62,6 +62,7 @@ func main() {
 		{
 			categoriesRoutes.POST("/add", handlers.CategoryAdd)
 			categoriesRoutes.GET("/:id", handlers.CategoryGetId)
+			categoriesRoutes.GET("/all", handlers.CategoryGetAll)
 			categoriesRoutes.PUT("/edit/:id", handlers.CategoryPutId)
 			categoriesRoutes.DELETE("/delete/:id", handlers.CategoryDeleteId)
 		}

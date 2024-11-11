@@ -6,6 +6,14 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
+var categoryTransform func(*db.Category) types.DbCategory = func(inp *db.Category) types.DbCategory {
+	return types.DbCategory{
+		ID:       inp.ID,
+		Name:     inp.Name,
+		ParentID: inp.ParentID,
+	}
+}
+
 // @Summary Get category by id
 // @Description Get category by id
 // @Tags category
@@ -21,13 +29,37 @@ import (
 // @Security ApiKeyAuth
 // @Router /category/:id [get]
 func CategoryGetId(c *gin.Context) {
-	GetHandler(func(inp *db.Category) types.DbCategory {
-		return types.DbCategory{
-			ID:       inp.ID,
-			Name:     inp.Name,
-			ParentID: inp.ParentID,
-		}
-	})(c)
+	GetHandler(categoryTransform)(c)
+}
+
+// @Summary Get all categories for user
+// @Description Get all categories for user
+// @Tags type
+// @Produce json
+// @Param Authorization header string true "Bearer token"
+// @Success 200 {object} []types.DbCategory
+// @Failure 401 {object} types.ErrorResponse
+// @Failure 500 {object} types.ErrorResponse
+// @Security ApiKeyAuth
+// @Router /category/all [get]
+func CategoryGetAll(c *gin.Context) {
+	userID, err := GetUserID(c)
+	if err != nil {
+		c.JSON(500, types.ErrorResponse{Message: err.Error()})
+		return
+	}
+	dbc := db.Connect()
+	var entities []*db.Category
+	if err := dbc.Find(&entities, db.Category{UserID: userID}).Error; err != nil {
+		c.JSON(500, types.ErrorResponse{Message: err.Error()})
+		return
+	}
+
+	var ret []types.DbCategory
+	for _, entity := range entities {
+		ret = append(ret, categoryTransform(entity))
+	}
+	c.JSON(200, ret)
 }
 
 // @Summary Get category by id
@@ -70,13 +102,7 @@ func CategoryPutId(c *gin.Context) {
 			dst.Name = src.Name
 			dst.ParentID = src.ParentID
 		},
-		func(inp *db.Category) types.DbCategory {
-			return types.DbCategory{
-				ID:       inp.ID,
-				Name:     inp.Name,
-				ParentID: inp.ParentID,
-			}
-		},
+		categoryTransform,
 	)(c)
 }
 
