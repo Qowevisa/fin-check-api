@@ -40,7 +40,7 @@ var (
 func (c *Category) BeforeSave(tx *gorm.DB) error {
 	if c.ParentID != 0 {
 		var parent Category
-		if err := tx.Find(&parent, c.ID).Error; err != nil {
+		if err := tx.Find(&parent, c.ParentID).Error; err != nil {
 			return err
 		}
 		if parent.ID == 0 {
@@ -54,7 +54,7 @@ func (c *Category) BeforeSave(tx *gorm.DB) error {
 	if err := tx.Find(&dup, Category{Name: c.Name, UserID: c.UserID}).Error; err != nil {
 		return err
 	}
-	if dup.ID != 0 {
+	if c.ID != dup.ID && dup.ID != 0 {
 		return ERROR_CATEGORY_NAME_NOT_UNIQUE
 	}
 	return nil
