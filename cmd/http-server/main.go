@@ -83,6 +83,7 @@ func main() {
 		{
 			typesRoutes.POST("/add", handlers.TypeAdd)
 			typesRoutes.GET("/:id", handlers.TypeGetId)
+			typesRoutes.GET("/all", handlers.TypeGetAll)
 			typesRoutes.PUT("/edit/:id", handlers.TypePutId)
 			typesRoutes.DELETE("/delete/:id", handlers.TypeDeleteId)
 		}

@@ -6,6 +6,15 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
+var typeTransform func(inp *db.Type) types.DbType = func(inp *db.Type) types.DbType {
+	return types.DbType{
+		ID:      inp.ID,
+		Name:    inp.Name,
+		Comment: inp.Comment,
+		Color:   inp.Color,
+	}
+}
+
 // @Summary Get dbtype by id
 // @Description Get dbtype by id
 // @Tags dbtype
@@ -21,14 +30,37 @@ import (
 // @Security ApiKeyAuth
 // @Router /dbtype/:id [get]
 func TypeGetId(c *gin.Context) {
-	GetHandler(func(inp *db.Type) types.DbType {
-		return types.DbType{
-			ID:      inp.ID,
-			Name:    inp.Name,
-			Comment: inp.Comment,
-			Color:   inp.Color,
-		}
-	})(c)
+	GetHandler(typeTransform)(c)
+}
+
+// @Summary Get all types for user
+// @Description Get all types for user
+// @Tags type
+// @Produce json
+// @Param Authorization header string true "Bearer token"
+// @Success 200 {object} []types.DbType
+// @Failure 401 {object} types.ErrorResponse
+// @Failure 500 {object} types.ErrorResponse
+// @Security ApiKeyAuth
+// @Router /type/all [get]
+func TypeGetAll(c *gin.Context) {
+	userID, err := GetUserID(c)
+	if err != nil {
+		c.JSON(500, types.ErrorResponse{Message: err.Error()})
+		return
+	}
+	dbc := db.Connect()
+	var entities []*db.Type
+	if err := dbc.Find(&entities, db.Type{UserID: userID}).Error; err != nil {
+		c.JSON(500, types.ErrorResponse{Message: err.Error()})
+		return
+	}
+
+	var ret []types.DbType
+	for _, entity := range entities {
+		ret = append(ret, typeTransform(entity))
+	}
+	c.JSON(200, ret)
 }
 
 // @Summary Get dbtype by id
@@ -74,14 +106,7 @@ func TypePutId(c *gin.Context) {
 			dst.Comment = updates.Comment
 			dst.Color = updates.Color
 		},
-		func(inp *db.Type) types.DbType {
-			return types.DbType{
-				ID:      inp.ID,
-				Name:    inp.Name,
-				Comment: inp.Comment,
-				Color:   inp.Color,
-			}
-		},
+		typeTransform,
 	)(c)
 }
 
