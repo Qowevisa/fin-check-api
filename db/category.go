@@ -35,9 +35,13 @@ var (
 	ERROR_CATEGORY_PARENT_NOT_FOUND  = errors.New("Can't find Category with ParentID for user")
 	ERROR_CATEGORY_NAME_NOT_UNIQUE   = errors.New("Name for Category have to be unique for user")
 	ERROR_CATEGORY_USER_ID_NOT_EQUAL = errors.New("ParentID is invalid for user")
+	ERROR_CATEGORY_SELF_REFERENCING  = errors.New("Category can't set itself as a parent")
 )
 
 func (c *Category) BeforeSave(tx *gorm.DB) error {
+	if c.ParentID == c.ID {
+		return ERROR_CATEGORY_SELF_REFERENCING
+	}
 	if c.ParentID != 0 {
 		var parent Category
 		if err := tx.Find(&parent, c.ParentID).Error; err != nil {
