@@ -88,6 +88,14 @@ func main() {
 			typesRoutes.PUT("/edit/:id", handlers.TypePutId)
 			typesRoutes.DELETE("/delete/:id", handlers.TypeDeleteId)
 		}
+		expensesRoutes := api.Group("/expense", middleware.AuthMiddleware())
+		{
+			expensesRoutes.POST("/add", handlers.ExpenseAdd)
+			expensesRoutes.GET("/:id", handlers.ExpenseGetId)
+			expensesRoutes.GET("/all", handlers.ExpenseGetAll)
+			expensesRoutes.PUT("/edit/:id", handlers.ExpensePutId)
+			expensesRoutes.DELETE("/delete/:id", handlers.ExpenseDeleteId)
+		}
 	}
 
 	r.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
