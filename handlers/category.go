@@ -62,8 +62,8 @@ func CategoryGetAll(c *gin.Context) {
 	c.JSON(200, ret)
 }
 
-// @Summary Get category by id
-// @Description Get category by id
+// @Summary Add category
+// @Description Add category
 // @Tags category
 // @Accept json
 // @Produce json

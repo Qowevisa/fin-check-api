@@ -63,8 +63,8 @@ func TypeGetAll(c *gin.Context) {
 	c.JSON(200, ret)
 }
 
-// @Summary Get dbtype by id
-// @Description Get dbtype by id
+// @Summary Add dbtype
+// @Description Add dbtype
 // @Tags dbtype
 // @Accept json
 // @Produce json

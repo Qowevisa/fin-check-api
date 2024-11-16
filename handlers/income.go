@@ -73,8 +73,8 @@ func IncomeGetId(c *gin.Context) {
 	c.JSON(200, ret)
 }
 
-// @Summary Get income by id
-// @Description Get income by id
+// @Summary Add income
+// @Description Add income
 // @Tags income
 // @Accept json
 // @Produce json

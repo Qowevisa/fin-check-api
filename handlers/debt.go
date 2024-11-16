@@ -35,8 +35,8 @@ func DebtGetId(c *gin.Context) {
 	})(c)
 }
 
-// @Summary Get debt by id
-// @Description Get debt by id
+// @Summary Add debt
+// @Description Add debt
 // @Tags debt
 // @Accept json
 // @Produce json

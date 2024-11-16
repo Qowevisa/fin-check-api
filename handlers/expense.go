@@ -65,8 +65,8 @@ func ExpenseGetAll(c *gin.Context) {
 	c.JSON(200, ret)
 }
 
-// @Summary Add expense by id
-// @Description Add expense by id
+// @Summary Add expense
+// @Description Add expense
 // @Tags expense
 // @Accept json
 // @Produce json

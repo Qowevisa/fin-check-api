@@ -63,8 +63,8 @@ func CardGetAll(c *gin.Context) {
 	c.JSON(200, ret)
 }
 
-// @Summary Get card by id
-// @Description Get card by id
+// @Summary Add card
+// @Description Add card
 // @Tags card
 // @Accept json
 // @Produce json
