@@ -125,9 +125,6 @@ func (e *Expense) AfterDelete(tx *gorm.DB) (err error) {
 	if card.UserID != e.UserID {
 		return ERROR_EXPENSE_INVALID_USERID
 	}
-	if card.Balance < e.Value {
-		return ERROR_EXPENSE_CARD_INSUFFICIENT_BALANCE
-	}
 	card.Balance += e.Value
 	if err := tx.Save(card).Error; err != nil {
 		return err
