@@ -80,3 +80,12 @@ type Session struct {
 	ID     string `json:"id"`
 	UserID uint   `json:"user_id" example:"1"`
 }
+
+type DbExpense struct {
+	ID      uint      `json:"id" example:"1"`
+	CardID  uint      `json:"card_id" example:"1"`
+	TypeID  uint      `json:"type_id" example:"1"`
+	Value   uint64    `json:"value" example:"20000"`
+	Comment string    `json:"comment" example:"pizza"`
+	Date    time.Time `json:"date" example:"29/11/2001 12:00"`
+}
