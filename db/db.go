@@ -58,5 +58,6 @@ func Connect() *gorm.DB {
 	gormDB.AutoMigrate(&User{})
 	gormDB.AutoMigrate(&Type{})
 	gormDB.AutoMigrate(&Session{})
+	gormDB.AutoMigrate(&Expense{})
 	return newUDB
 }
