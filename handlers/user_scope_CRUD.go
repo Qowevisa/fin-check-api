@@ -115,7 +115,8 @@ func UpdateHandler[T db.UserIdentifiable, R any](
 
 		var updates R
 		if err := c.ShouldBindJSON(&updates); err != nil {
-			c.JSON(400, types.ErrorResponse{Message: "Invalid request"})
+			log.Printf("c.ShouldBindJSON: error: %v\n", err)
+			c.JSON(400, types.ErrorResponse{Message: "Invalid request: 2"})
 			return
 		}
 
