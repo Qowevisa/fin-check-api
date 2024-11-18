@@ -22,6 +22,23 @@ type Item struct {
 	//
 	TypeID uint
 	Type   *Type
+	UserID uint
+	User   *User
+}
+
+// Implements db.UserIdentifiable:1
+func (i Item) GetID() uint {
+	return i.ID
+}
+
+// Implements db.UserIdentifiable:2
+func (i Item) GetUserID() uint {
+	return i.UserID
+}
+
+// Implements db.UserIdentifiable:3
+func (i *Item) SetUserID(id uint) {
+	i.UserID = id
 }
 
 func GetItem(id uint, preloadPrices bool) (*Item, error) {
