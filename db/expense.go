@@ -85,7 +85,7 @@ func (e *Expense) BeforeUpdate(tx *gorm.DB) (err error) {
 		if oldCard.UserID != e.UserID {
 			return ERROR_EXPENSE_INVALID_USERID
 		}
-		oldCard.Balance += e.Value
+		oldCard.Balance += original.Value
 		if err := tx.Save(oldCard).Error; err != nil {
 			return err
 		}
