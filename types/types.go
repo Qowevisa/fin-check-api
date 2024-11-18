@@ -97,3 +97,23 @@ type DbTransfer struct {
 	Value      uint64    `json:"value" example:"20000"`
 	Date       time.Time `json:"date" example:"29/11/2001 12:00"`
 }
+
+type DbItem struct {
+	ID             uint   `json:"id" example:"1"`
+	CategoryID     uint   `json:"category_id" example:"1"`
+	CurrentPriceID uint   `json:"current_price_id" example:"1"`
+	TypeID         uint   `json:"type_id" example:"1"`
+	Name           string `json:"name" example:"pizza"`
+	Comment        string `json:"comment" example:"this is an item"`
+	MetricType     uint8  `json:"metric_type" example:"0"`
+	MetricValue    uint64 `json:"metric_value" example:"10000"`
+	Proteins       uint64 `json:"proteins" example:"0"`
+	Carbs          uint64 `json:"carbs" example:"0"`
+	Fats           uint64 `json:"fats" example:"0"`
+	Price          uint64 `json:"price" example:"10050"`
+}
+
+type DbItemSearch struct {
+	CategoryID uint `json:"category_id" example:"1"`
+	TypeID     uint `json:"type_id" example:"1"`
+}
