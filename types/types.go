@@ -56,7 +56,6 @@ type DbIncome struct {
 	Comment string    `json:"comment" example:"pizza"`
 	Value   uint64    `json:"value" example:"20000"`
 	Date    time.Time `json:"date" example:"29/11/2001 12:00"`
-	UserID  uint      `json:"user_id" example:"1"`
 }
 
 type DbType struct {
