@@ -104,6 +104,13 @@ func main() {
 			transfersRoutes.PUT("/edit/:id", handlers.TransferPutId)
 			transfersRoutes.DELETE("/delete/:id", handlers.TransferDeleteId)
 		}
+		itemRoutes := api.Group("/item", middleware.AuthMiddleware())
+		{
+			itemRoutes.GET("/:id", handlers.ItemGetId)
+			itemRoutes.GET("/all", handlers.ItemGetAll)
+			itemRoutes.POST("/filter", handlers.ItemPostFilter)
+			itemRoutes.DELETE("/delete/:id", handlers.ItemDeleteId)
+		}
 	}
 
 	r.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
