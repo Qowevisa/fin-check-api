@@ -33,6 +33,36 @@ func IncomeGetId(c *gin.Context) {
 	GetHandler(incomeTransform)(c)
 }
 
+// @Summary Get all incomes for user
+// @Description Get all incomes for user
+// @Tags type
+// @Produce json
+// @Param Authorization header string true "Bearer token"
+// @Success 200 {object} []types.DbIncome
+// @Failure 401 {object} types.ErrorResponse
+// @Failure 500 {object} types.ErrorResponse
+// @Security ApiKeyAuth
+// @Router /income/all [get]
+func IncomeGetAll(c *gin.Context) {
+	userID, err := GetUserID(c)
+	if err != nil {
+		c.JSON(500, types.ErrorResponse{Message: err.Error()})
+		return
+	}
+	dbc := db.Connect()
+	var entities []*db.Income
+	if err := dbc.Find(&entities, db.Income{UserID: userID}).Error; err != nil {
+		c.JSON(500, types.ErrorResponse{Message: err.Error()})
+		return
+	}
+
+	var ret []types.DbIncome
+	for _, entity := range entities {
+		ret = append(ret, incomeTransform(entity))
+	}
+	c.JSON(200, ret)
+}
+
 // @Summary Add income
 // @Description Add income
 // @Tags income

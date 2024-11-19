@@ -77,6 +77,7 @@ func main() {
 		{
 			incomeRoutes.POST("/add", handlers.IncomeAdd)
 			incomeRoutes.GET("/:id", handlers.IncomeGetId)
+			incomeRoutes.GET("/all", handlers.IncomeGetAll)
 			incomeRoutes.PUT("/edit/:id", handlers.IncomePutId)
 			incomeRoutes.DELETE("/delete/:id", handlers.IncomeDeleteId)
 		}
