@@ -1,11 +1,14 @@
 package main
 
 import (
+	"fmt"
+	"os"
 	"time"
 
 	"github.com/swaggo/files"
 	"github.com/swaggo/gin-swagger"
 
+	"git.qowevisa.me/Qowevisa/fin-check-api/db"
 	docs "git.qowevisa.me/Qowevisa/fin-check-api/docs"
 	"git.qowevisa.me/Qowevisa/fin-check-api/handlers"
 	"git.qowevisa.me/Qowevisa/fin-check-api/middleware"
@@ -29,6 +32,10 @@ import (
 // @host gonapi.qowevisa.click
 // @BasePath /api
 func main() {
+	if err := db.Init(); err != nil {
+		fmt.Printf("ERROR: db.Init: %v\n", err)
+		os.Exit(1)
+	}
 	r := gin.Default()
 	docs.SwaggerInfo.BasePath = "/api"
 	r.Use(cors.New(cors.Config{

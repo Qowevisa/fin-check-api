@@ -2,6 +2,7 @@ package db
 
 import (
 	"errors"
+	"fmt"
 	"log"
 	"os"
 	"sync"
@@ -18,6 +19,15 @@ var conMu sync.Mutex
 var (
 	ERROR_DB_NOT_INIT = errors.New("Database connection is not initialized")
 )
+
+func Init() error {
+	dbc := Connect()
+	// Seeds
+	if err := initStateOfDb(dbc); err != nil {
+		return fmt.Errorf("initStateOfDb: %w", err)
+	}
+	return nil
+}
 
 func Connect() *gorm.DB {
 	conMu.Lock()
@@ -61,4 +71,46 @@ func Connect() *gorm.DB {
 	gormDB.AutoMigrate(&Expense{})
 	gormDB.AutoMigrate(&Metric{})
 	return newUDB
+}
+
+var (
+	CANT_FIND_METRIC = errors.New("Can't find proper metrics in database")
+)
+
+func initMetrics(tx *gorm.DB) error {
+	var metrics []Metric
+	if err := tx.Find(&metrics).Error; err != nil {
+		return err
+	}
+	metricsThatNeeded := []*Metric{
+		&Metric{Name: "None", Short: "pcs", Value: 0},
+		&Metric{Name: "Gram", Short: "g", Value: 1},
+		&Metric{Name: "Kilogram", Short: "kg", Value: 2},
+		&Metric{Name: "Liter", Short: "l", Value: 3},
+	}
+	if len(metrics) == 0 {
+		for _, m := range metricsThatNeeded {
+			if err := tx.Create(m).Error; err != nil {
+				return err
+			}
+		}
+		return nil
+	}
+	for _, m := range metricsThatNeeded {
+		tmp := &Metric{}
+		if err := tx.Find(tmp, m).Error; err != nil {
+			return err
+		}
+		if tmp.ID == 0 {
+			return CANT_FIND_METRIC
+		}
+	}
+	return nil
+}
+
+func initStateOfDb(tx *gorm.DB) error {
+	if err := initMetrics(tx); err != nil {
+		return fmt.Errorf("initMetrics: %w", err)
+	}
+	return nil
 }
