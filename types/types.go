@@ -116,3 +116,9 @@ type DbItemSearch struct {
 	CategoryID uint `json:"category_id" example:"1"`
 	TypeID     uint `json:"type_id" example:"1"`
 }
+
+type DbMetric struct {
+	Value uint8  `json:"value" example:"1"`
+	Name  string `json:"name" example:"Kilogram"`
+	Short string `json:"short" example:"kg"`
+}
