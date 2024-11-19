@@ -119,6 +119,10 @@ func main() {
 			itemRoutes.POST("/filter", handlers.ItemPostFilter)
 			itemRoutes.DELETE("/delete/:id", handlers.ItemDeleteId)
 		}
+		metricRoutes := api.Group("/metric", middleware.AuthMiddleware())
+		{
+			metricRoutes.GET("/all", handlers.MetricGetAll)
+		}
 	}
 
 	r.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
