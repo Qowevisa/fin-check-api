@@ -55,7 +55,7 @@ func IncomeAdd(c *gin.Context) {
 			dst.Comment = src.Comment
 			dst.Date = src.Date
 		},
-	)
+	)(c)
 }
 
 // @Summary Edit income by id
