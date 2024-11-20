@@ -6,6 +6,7 @@ type Item struct {
 	gorm.Model
 	Name        string
 	Comment     string
+	Price       uint64
 	MetricType  uint8
 	MetricValue uint64
 	//
