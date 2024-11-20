@@ -78,40 +78,62 @@ var (
 	CANT_FIND_METRIC = errors.New("Can't find proper metrics in database")
 )
 
-func initMetrics(tx *gorm.DB) error {
-	var metrics []Metric
-	if err := tx.Find(&metrics).Error; err != nil {
+func checkSeededValues[T Identifiable](whatToCheck []*T, errorIfNotFound error, tx *gorm.DB) error {
+	var valuesInDB []T
+	if err := tx.Find(&valuesInDB).Error; err != nil {
 		return err
 	}
+	if len(valuesInDB) == 0 {
+		for _, v := range whatToCheck {
+			if err := tx.Create(v).Error; err != nil {
+				return err
+			}
+		}
+		return nil
+	}
+	for _, v := range whatToCheck {
+		var tmp T
+		if err := tx.Find(&tmp, v).Error; err != nil {
+			return err
+		}
+		if tmp.GetID() == 0 {
+			return errorIfNotFound
+		}
+	}
+	return nil
+}
+
+func initMetrics(tx *gorm.DB) error {
 	metricsThatNeeded := []*Metric{
 		&Metric{Name: "None", Short: "pcs", Value: 0},
 		&Metric{Name: "Gram", Short: "g", Value: 1},
 		&Metric{Name: "Kilogram", Short: "kg", Value: 2},
 		&Metric{Name: "Liter", Short: "l", Value: 3},
 	}
-	if len(metrics) == 0 {
-		for _, m := range metricsThatNeeded {
-			if err := tx.Create(m).Error; err != nil {
-				return err
-			}
-		}
-		return nil
+	return checkSeededValues(metricsThatNeeded, CANT_FIND_METRIC, tx)
+}
+
+func initCurrencies(tx *gorm.DB) error {
+	currsThatNeeded := []*Currency{
+		{Name: "Dollar", Symbol: "$", ISOName: "USD"},
+		{Name: "Moldavian Leu", Symbol: "L", ISOName: "MDL"},
+		{Name: "Romanian Leu", Symbol: "L", ISOName: "RON"},
+		{Name: "Polish Zloty", Symbol: "zł", ISOName: "PLN"},
+		{Name: "Ukrainian Hryvnia", Symbol: "₴", ISOName: "UAH"},
+		{Name: "Euro", Symbol: "€", ISOName: "EUR"},
+		{Name: "Russian Ruble", Symbol: "₽", ISOName: "RUB"},
+		{Name: "Kazakhstani Tenge", Symbol: "₸", ISOName: "KZT"},
+		{Name: "Chinese Yuan", Symbol: "¥", ISOName: "CNY"},
 	}
-	for _, m := range metricsThatNeeded {
-		tmp := &Metric{}
-		if err := tx.Find(tmp, m).Error; err != nil {
-			return err
-		}
-		if tmp.ID == 0 {
-			return CANT_FIND_METRIC
-		}
-	}
-	return nil
+	return checkSeededValues(currsThatNeeded, CANT_FIND_METRIC, tx)
 }
 
 func initStateOfDb(tx *gorm.DB) error {
 	if err := initMetrics(tx); err != nil {
 		return fmt.Errorf("initMetrics: %w", err)
+	}
+	if err := initCurrencies(tx); err != nil {
+		return fmt.Errorf("initCurrencies: %w", err)
 	}
 	return nil
 }
