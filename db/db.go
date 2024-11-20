@@ -118,7 +118,7 @@ func initCurrencies(tx *gorm.DB) error {
 	currsThatNeeded := []*Currency{
 		{Name: "Dollar", Symbol: "$", ISOName: "USD"},
 		{Name: "Moldavian Leu", Symbol: "L", ISOName: "MDL"},
-		{Name: "Romanian Leu", Symbol: "L", ISOName: "RON"},
+		{Name: "Romanian Leu", Symbol: "RL", ISOName: "RON"},
 		{Name: "Polish Zloty", Symbol: "zł", ISOName: "PLN"},
 		{Name: "Ukrainian Hryvnia", Symbol: "₴", ISOName: "UAH"},
 		{Name: "Euro", Symbol: "€", ISOName: "EUR"},
