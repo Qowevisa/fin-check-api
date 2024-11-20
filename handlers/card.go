@@ -13,6 +13,8 @@ var cardTransform func(inp *db.Card) types.DbCard = func(inp *db.Card) types.DbC
 		Balance:        inp.Balance,
 		HaveCreditLine: inp.HaveCreditLine,
 		CreditLine:     inp.CreditLine,
+		LastDigits:     inp.LastDigits,
+		CurrencyID:     inp.CurrencyID,
 	}
 }
 
@@ -82,6 +84,8 @@ func CardAdd(c *gin.Context) {
 		dst.Balance = src.Balance
 		dst.HaveCreditLine = src.HaveCreditLine
 		dst.CreditLine = src.CreditLine
+		dst.LastDigits = src.LastDigits
+		dst.CurrencyID = src.CurrencyID
 	})(c)
 }
 
@@ -107,6 +111,8 @@ func CardPutId(c *gin.Context) {
 			dst.Balance = src.Balance
 			dst.CreditLine = src.CreditLine
 			dst.HaveCreditLine = src.HaveCreditLine
+			dst.LastDigits = src.LastDigits
+			dst.CurrencyID = src.CurrencyID
 		},
 		cardTransform)(c)
 }
