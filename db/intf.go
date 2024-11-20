@@ -10,3 +10,7 @@ type UserIdentifiable interface {
 	GetUserID() uint
 	SetUserID(userID uint)
 }
+
+type PaymentGroup interface {
+	__internalBelogingToPayment()
+}
