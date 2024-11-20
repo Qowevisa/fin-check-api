@@ -2,7 +2,6 @@ package db
 
 type Identifiable interface {
 	GetID() uint
-	SetID(id uint)
 }
 
 type UserIdentifiable interface {
