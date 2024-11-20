@@ -1,6 +1,10 @@
 package db
 
-import "gorm.io/gorm"
+import (
+	"errors"
+
+	"gorm.io/gorm"
+)
 
 type Item struct {
 	gorm.Model
@@ -72,4 +76,36 @@ func GetItemToRootCat(id uint, preloadPrices bool) (*Item, error) {
 		})
 	}).Preload("CurrentPrice").First(&item, id).Error
 	return &item, err
+}
+
+var (
+	ERROR_ITEM_PRICE_ISZERO     = errors.New("Item's Price is zero")
+	ERROR_ITEM_ITEMPRICE_INTERR = errors.New("Item's ItemPrice ID is zero after creating")
+)
+
+func (i *Item) BeforeCreate(tx *gorm.DB) error {
+	if i.Price == 0 {
+		return ERROR_ITEM_PRICE_ISZERO
+	}
+	return nil
+}
+
+func (i *Item) AfterCreate(tx *gorm.DB) error {
+	if i.CurrentPriceID == 0 {
+		itemPrice := &ItemPrice{
+			ItemID: i.ID,
+			Price:  i.Price,
+		}
+		if err := tx.Create(itemPrice).Error; err != nil {
+			return err
+		}
+		if itemPrice.ID == 0 {
+			return ERROR_ITEM_ITEMPRICE_INTERR
+		}
+		i.CurrentPriceID = itemPrice.ID
+		if err := tx.Save(i).Error; err != nil {
+			return err
+		}
+	}
+	return nil
 }
