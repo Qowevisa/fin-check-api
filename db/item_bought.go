@@ -15,3 +15,5 @@ type ItemBought struct {
 	MetricType  uint8
 	MetricValue uint64
 }
+
+func (i ItemBought) __internalBelogingToPayment() {}

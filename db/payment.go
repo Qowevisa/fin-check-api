@@ -21,3 +21,5 @@ type Payment struct {
 	Items      []ItemBought `gorm:"constraint:OnDelete:CASCADE;"`
 	Date       time.Time
 }
+
+func (p Payment) __internalBelogingToPayment() {}

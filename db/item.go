@@ -27,6 +27,8 @@ type Item struct {
 	User   *User
 }
 
+func (i Item) __internalBelogingToPayment() {}
+
 // Implements db.UserIdentifiable:1
 func (i Item) GetID() uint {
 	return i.ID
