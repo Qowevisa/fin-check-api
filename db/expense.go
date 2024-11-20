@@ -2,7 +2,6 @@ package db
 
 import (
 	"errors"
-	"log"
 	"time"
 
 	"gorm.io/gorm"
@@ -43,7 +42,6 @@ var (
 )
 
 func (e *Expense) BeforeCreate(tx *gorm.DB) error {
-	log.Printf("BeforeCreate")
 	card := &Card{}
 	if err := tx.Find(card, e.CardID).Error; err != nil {
 		return err
@@ -63,9 +61,6 @@ func (e *Expense) BeforeCreate(tx *gorm.DB) error {
 	if err := tx.Find(typ, e.TypeID).Error; err != nil {
 		return err
 	}
-	log.Printf("e.UserID = %d\n", e.UserID)
-	log.Printf("e.TypeID= %d\n", e.TypeID)
-	log.Printf("typ.UserID= %d\n", typ.UserID)
 	if typ.UserID != e.UserID {
 		return ERROR_EXPENSE_INVALID_TYPE_USERID
 	}
