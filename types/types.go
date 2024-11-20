@@ -65,16 +65,6 @@ type DbType struct {
 	Color   string `json:"color" example:"red"`
 }
 
-type DbPayment struct {
-	ID         uint      `json:"id" example:"1"`
-	CardID     uint      `json:"card_id" example:"1"`
-	CategoryID uint      `json:"category_id" example:"1"`
-	Title      string    `json:"title" example:"Veggies"`
-	Descr      string    `json:"description" example:""`
-	Note       string    `json:"not" example:"I'm a teapot"`
-	Date       time.Time `json:"date" example:"29/11/2001 12:00"`
-}
-
 type Session struct {
 	ID     string `json:"id"`
 	UserID uint   `json:"user_id" example:"1"`
@@ -121,4 +111,29 @@ type DbMetric struct {
 	Value uint8  `json:"value" example:"1"`
 	Name  string `json:"name" example:"Kilogram"`
 	Short string `json:"short" example:"kg"`
+}
+
+type Payment struct {
+	ID          uint         `json:"id" example:"1"`
+	CardID      uint         `json:"card_id" example:"1"`
+	CategoryID  uint         `json:"category_id" example:"1"`
+	Title       string       `json:"title" example:"some title"`
+	Description string       `json:"descr" example:"i bought some title for 20$"`
+	Note        string       `json:"note" example:"no i did not hit domain"`
+	Date        time.Time    `json:"date" example:"29/11/2001 12:00"`
+	Items       []ItemBought `json:"items" example:"[]"`
+}
+
+type ItemBought struct {
+	ID          uint   `json:"id" example:"1"`
+	NewName     string `json:"new_name" example:"itemName"`
+	NewComment  string `json:"new_comment" example:"itemName"`
+	ItemID      uint   `json:"item_id" example:"0"`
+	PaymentID   uint   `json:"payment_id" example:"1"`
+	TypeID      uint   `json:"type_id" example:"1"`
+	Price       uint64 `json:"price" example:"1025"`
+	Quantity    uint   `json:"quantity" example:"2"`
+	TotalCost   uint64 `json:"total_cost" example:"2050"`
+	MetricType  uint8  `json:"metric_type" example:"0"`
+	MetricValue uint64 `json:"metric_value" example:"100"`
 }
