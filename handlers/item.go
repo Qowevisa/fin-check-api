@@ -21,7 +21,7 @@ var itemTransform func(inp *db.Item) types.DbItem = func(inp *db.Item) types.DbI
 		Proteins:       inp.Proteins,
 		Carbs:          inp.Carbs,
 		Fats:           inp.Fats,
-		Price:          inp.CurrentPrice.Price,
+		Price:          inp.Price,
 	}
 }
 
