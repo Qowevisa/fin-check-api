@@ -17,7 +17,7 @@ type Item struct {
 	Carbs    uint64
 	Fats     uint64
 	//
-	Prices         []ItemPrice
+	Prices         []ItemPrice `gorm:"constraint:OnDelete:CASCADE;"`
 	CurrentPriceID uint
 	CurrentPrice   *ItemPrice
 	//
