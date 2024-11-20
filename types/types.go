@@ -113,6 +113,13 @@ type DbMetric struct {
 	Short string `json:"short" example:"kg"`
 }
 
+type DbCurrency struct {
+	ID      uint   `json:"id" example:"1"`
+	Name    string `json:"name" example:"Dollar"`
+	ISOName string `json:"iso_name" example:"USD"`
+	Symbol  string `json:"symbol" example:"$"`
+}
+
 type Payment struct {
 	ID          uint         `json:"id" example:"1"`
 	CardID      uint         `json:"card_id" example:"1"`
