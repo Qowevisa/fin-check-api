@@ -123,6 +123,10 @@ func main() {
 		{
 			metricRoutes.GET("/all", handlers.MetricGetAll)
 		}
+		paymentRoutes := api.Group("/payment", middleware.AuthMiddleware())
+		{
+			paymentRoutes.POST("/add", handlers.PaymentAdd)
+		}
 	}
 
 	r.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
