@@ -127,6 +127,10 @@ func main() {
 		{
 			paymentRoutes.POST("/add", handlers.PaymentAdd)
 		}
+		currencyRoutes := api.Group("/currency", middleware.AuthMiddleware())
+		{
+			currencyRoutes.GET("/all", handlers.CurrencyGetAll)
+		}
 	}
 
 	r.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
