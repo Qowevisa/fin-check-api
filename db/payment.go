@@ -18,6 +18,6 @@ type Payment struct {
 	Title      string
 	Descr      string
 	Note       string
-	Items      []ItemBought
+	Items      []ItemBought `gorm:"constraint:OnDelete:CASCADE;"`
 	Date       time.Time
 }
