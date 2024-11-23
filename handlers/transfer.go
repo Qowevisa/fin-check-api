@@ -22,6 +22,13 @@ var transferTransform func(inp *db.Transfer) types.DbTransfer = func(inp *db.Tra
 		haveDiffCurrs = inp.FromCard.CurrencyID != inp.ToCard.CurrencyID
 	}
 	var showValue string
+	sameCurrSymbol := ""
+	if inp.FromCard != nil && inp.FromCard.Currency != nil {
+		sameCurrSymbol = inp.FromCard.Currency.Symbol
+	}
+	if sameCurrSymbol == "" && inp.ToCard != nil && inp.ToCard.Currency != nil {
+		sameCurrSymbol = inp.ToCard.Currency.Symbol
+	}
 	if haveDiffCurrs {
 		showValue = fmt.Sprintf("%d.%02d%s -> %d.%02d%s",
 			inp.FromValue/100,
@@ -32,7 +39,7 @@ var transferTransform func(inp *db.Transfer) types.DbTransfer = func(inp *db.Tra
 			inp.ToCard.Currency.Symbol,
 		)
 	} else {
-		showValue = fmt.Sprintf("%d.%02d", inp.Value/100, inp.Value%100)
+		showValue = fmt.Sprintf("%d.%02d%s", inp.Value/100, inp.Value%100, sameCurrSymbol)
 	}
 	return types.DbTransfer{
 		ID:         inp.ID,
