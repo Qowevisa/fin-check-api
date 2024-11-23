@@ -24,13 +24,16 @@ type ErrorResponse struct {
 }
 
 type DbCard struct {
-	ID             uint   `json:"id" example:"1"`
-	Name           string `json:"name" example:"CreditCard"`
-	Balance        uint64 `json:"balance" example:"1000"`
-	HaveCreditLine bool   `json:"have_credit_line" example:"true"`
-	CreditLine     uint64 `json:"credit_line" example:"500000"`
-	LastDigits     string `json:"last_digits" example:"1111"`
-	CurrencyID     uint   `json:"currency_id" example:"1"`
+	ID             uint       `json:"id" example:"1"`
+	Name           string     `json:"name" example:"CreditCard"`
+	Balance        uint64     `json:"balance" example:"1000"`
+	HaveCreditLine bool       `json:"have_credit_line" example:"true"`
+	CreditLine     uint64     `json:"credit_line" example:"500000"`
+	LastDigits     string     `json:"last_digits" example:"1111"`
+	CurrencyID     uint       `json:"currency_id" example:"1"`
+	Currency       DbCurrency `json:"currency"`
+	// Purely UI things
+	DisplayName string `json:"display_name" example:"CreditCard •4444"`
 }
 
 type DbCategory struct {
