@@ -1,12 +1,22 @@
 package handlers
 
 import (
+	"fmt"
+	"strconv"
+
 	"git.qowevisa.me/Qowevisa/fin-check-api/db"
 	"git.qowevisa.me/Qowevisa/fin-check-api/types"
 	"github.com/gin-gonic/gin"
+	"gorm.io/gorm"
 )
 
 var cardTransform func(inp *db.Card) types.DbCard = func(inp *db.Card) types.DbCard {
+	var curr types.DbCurrency
+	if inp.Currency != nil {
+		curr = currencyTransform(inp.Currency)
+	} else {
+		curr = types.DbCurrency{}
+	}
 	return types.DbCard{
 		ID:             inp.ID,
 		Name:           inp.Name,
@@ -15,6 +25,8 @@ var cardTransform func(inp *db.Card) types.DbCard = func(inp *db.Card) types.DbC
 		CreditLine:     inp.CreditLine,
 		LastDigits:     inp.LastDigits,
 		CurrencyID:     inp.CurrencyID,
+		Currency:       curr,
+		DisplayName:    fmt.Sprintf("%s •%s", inp.Name, inp.LastDigits),
 	}
 }
 
@@ -51,9 +63,20 @@ func CardGetAll(c *gin.Context) {
 		c.JSON(500, types.ErrorResponse{Message: err.Error()})
 		return
 	}
+	preloadCurrencies := c.DefaultQuery("preload_currencies", "false")
+	shouldPreloadCurrencies := false
+	if val, err := strconv.ParseBool(preloadCurrencies); err == nil {
+		shouldPreloadCurrencies = val
+	}
 	dbc := db.Connect()
 	var entities []*db.Card
-	if err := dbc.Find(&entities, db.Card{UserID: userID}).Error; err != nil {
+	var tx *gorm.DB
+	if shouldPreloadCurrencies {
+		tx = dbc.Preload("Currency")
+	} else {
+		tx = dbc
+	}
+	if err := tx.Find(&entities, db.Card{UserID: userID}).Error; err != nil {
 		c.JSON(500, types.ErrorResponse{Message: err.Error()})
 		return
 	}
