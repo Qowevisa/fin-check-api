@@ -89,7 +89,14 @@ type DbTransfer struct {
 	FromCardID uint      `json:"from_card_id" example:"1"`
 	ToCardID   uint      `json:"to_card_id" example:"1"`
 	Value      uint64    `json:"value" example:"20000"`
+	FromValue  uint64    `json:"from_value" example:"20000"`
+	ToValue    uint64    `json:"to_value" example:"20000"`
 	Date       time.Time `json:"date" example:"29/11/2001 12:00"`
+	// Purely UI things
+	ShowValue               string `json:"show_value" example:"10.35$"`
+	HaveDifferentCurrencies bool   `json:"have_diff_currs" example:"false"`
+	FromCard                DbCard `json:"from_card"`
+	ToCard                  DbCard `json:"to_card"`
 }
 
 type DbItem struct {
