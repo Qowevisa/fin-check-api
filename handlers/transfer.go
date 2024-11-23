@@ -1,18 +1,52 @@
 package handlers
 
 import (
+	"fmt"
+
 	"git.qowevisa.me/Qowevisa/fin-check-api/db"
 	"git.qowevisa.me/Qowevisa/fin-check-api/types"
 	"github.com/gin-gonic/gin"
 )
 
 var transferTransform func(inp *db.Transfer) types.DbTransfer = func(inp *db.Transfer) types.DbTransfer {
+	var fromCard types.DbCard
+	var toCard types.DbCard
+	if inp.FromCard != nil {
+		fromCard = cardTransform(inp.FromCard)
+	}
+	if inp.ToCard != nil {
+		toCard = cardTransform(inp.ToCard)
+	}
+	haveDiffCurrs := false
+	if inp.FromCard != nil && inp.FromCard.Currency != nil && inp.ToCard != nil && inp.ToCard.Currency != nil {
+		haveDiffCurrs = inp.FromCard.CurrencyID != inp.ToCard.CurrencyID
+	}
+	var showValue string
+	if haveDiffCurrs {
+		showValue = fmt.Sprintf("%d.%02d%s -> %d.%02d%s",
+			inp.FromValue/100,
+			inp.FromValue%100,
+			inp.FromCard.Currency.Symbol,
+			inp.ToValue/100,
+			inp.ToValue%100,
+			inp.ToCard.Currency.Symbol,
+		)
+	} else {
+		showValue = fmt.Sprintf("%d.%02d", inp.Value/100, inp.Value%100)
+	}
 	return types.DbTransfer{
 		ID:         inp.ID,
 		FromCardID: inp.FromCardID,
 		ToCardID:   inp.ToCardID,
 		Value:      inp.Value,
+		FromValue:  inp.FromValue,
+		ToValue:    inp.ToValue,
 		Date:       inp.Date,
+		//
+		ShowValue:               showValue,
+		HaveDifferentCurrencies: haveDiffCurrs,
+		FromCard:                fromCard,
+		ToCard:                  toCard,
 	}
 }
 
@@ -52,7 +86,7 @@ func TransferGetAll(c *gin.Context) {
 	}
 	dbc := db.Connect()
 	var entities []*db.Transfer
-	if err := dbc.Find(&entities, db.Transfer{UserID: userID}).Error; err != nil {
+	if err := dbc.Preload("FromCard.Currency").Preload("ToCard.Currency").Find(&entities, db.Transfer{UserID: userID}).Error; err != nil {
 		c.JSON(500, types.ErrorResponse{Message: err.Error()})
 		return
 	}
@@ -82,6 +116,8 @@ func TransferAdd(c *gin.Context) {
 		dst.ToCardID = src.ToCardID
 		dst.Value = src.Value
 		dst.Date = src.Date
+		dst.FromValue = src.FromValue
+		dst.ToValue = src.ToValue
 	})(c)
 }
 
@@ -107,6 +143,8 @@ func TransferPutId(c *gin.Context) {
 			dst.ToCardID = src.ToCardID
 			dst.Value = src.Value
 			dst.Date = src.Date
+			dst.FromValue = src.FromValue
+			dst.ToValue = src.ToValue
 		},
 		transferTransform,
 	)(c)
