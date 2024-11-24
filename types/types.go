@@ -82,6 +82,9 @@ type DbExpense struct {
 	Value   uint64    `json:"value" example:"20000"`
 	Comment string    `json:"comment" example:"pizza"`
 	Date    time.Time `json:"date" example:"29/11/2001 12:00"`
+	// Purely UI things
+	Card      DbCard `json:"card"`
+	ShowValue string `json:"show_value" example:"10.35$"`
 }
 
 type DbTransfer struct {
