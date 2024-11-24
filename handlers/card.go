@@ -12,8 +12,10 @@ import (
 
 var cardTransform func(inp *db.Card) types.DbCard = func(inp *db.Card) types.DbCard {
 	var curr types.DbCurrency
+	symbolPostfixForCard := ""
 	if inp.Currency != nil {
 		curr = currencyTransform(inp.Currency)
+		symbolPostfixForCard = fmt.Sprintf(" (%s)", inp.Currency.Symbol)
 	} else {
 		curr = types.DbCurrency{}
 	}
@@ -26,7 +28,7 @@ var cardTransform func(inp *db.Card) types.DbCard = func(inp *db.Card) types.DbC
 		LastDigits:     inp.LastDigits,
 		CurrencyID:     inp.CurrencyID,
 		Currency:       curr,
-		DisplayName:    fmt.Sprintf("%s •%s", inp.Name, inp.LastDigits),
+		DisplayName:    fmt.Sprintf("%s •%s%s", inp.Name, inp.LastDigits, symbolPostfixForCard),
 	}
 }
 
