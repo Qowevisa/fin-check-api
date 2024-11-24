@@ -1,19 +1,35 @@
 package handlers
 
 import (
+	"fmt"
+
 	"git.qowevisa.me/Qowevisa/fin-check-api/db"
 	"git.qowevisa.me/Qowevisa/fin-check-api/types"
 	"github.com/gin-gonic/gin"
 )
 
 var expenseTransform func(inp *db.Expense) types.DbExpense = func(inp *db.Expense) types.DbExpense {
+	var card types.DbCard
+	expenseValueSymbolPostfix := ""
+	if inp.Card != nil {
+		card = cardTransform(inp.Card)
+		if inp.Card.Currency != nil {
+			expenseValueSymbolPostfix = fmt.Sprintf(" (%s)", inp.Card.Currency.Symbol)
+		}
+	} else {
+		card = types.DbCard{}
+	}
+	var showValue string
+	showValue = fmt.Sprintf("%d.%02d%s", inp.Value/100, inp.Value%100, expenseValueSymbolPostfix)
 	return types.DbExpense{
-		ID:      inp.ID,
-		CardID:  inp.CardID,
-		TypeID:  inp.TypeID,
-		Value:   inp.Value,
-		Comment: inp.Comment,
-		Date:    inp.Date,
+		ID:        inp.ID,
+		CardID:    inp.CardID,
+		TypeID:    inp.TypeID,
+		Value:     inp.Value,
+		Comment:   inp.Comment,
+		Date:      inp.Date,
+		Card:      card,
+		ShowValue: showValue,
 	}
 }
 
@@ -53,7 +69,7 @@ func ExpenseGetAll(c *gin.Context) {
 	}
 	dbc := db.Connect()
 	var entities []*db.Expense
-	if err := dbc.Find(&entities, db.Expense{UserID: userID}).Error; err != nil {
+	if err := dbc.Preload("Card.Currency").Find(&entities, db.Expense{UserID: userID}).Error; err != nil {
 		c.JSON(500, types.ErrorResponse{Message: err.Error()})
 		return
 	}
