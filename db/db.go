@@ -49,7 +49,7 @@ func Connect() *gorm.DB {
 			Colorful:                  false,
 		},
 	)
-	gormDB, err := gorm.Open(sqlite.Open("gonuts.db"), &gorm.Config{
+	gormDB, err := gorm.Open(sqlite.Open("fin-check.db"), &gorm.Config{
 		Logger: newLogger,
 	})
 	if err != nil {
