@@ -1,4 +1,8 @@
-# gonuts
+# Fin-Check Golang API
 
-Nutrions manager in Go
+REST API written in Golang + Gin + Swagger
 
+## Launch
+```bach
+make api-local
+```
