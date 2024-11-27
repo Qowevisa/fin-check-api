@@ -39,9 +39,6 @@ var (
 )
 
 func (c *Category) BeforeSave(tx *gorm.DB) error {
-	if c.ParentID == c.ID {
-		return ERROR_CATEGORY_SELF_REFERENCING
-	}
 	if c.ParentID != 0 {
 		var parent Category
 		if err := tx.Find(&parent, c.ParentID).Error; err != nil {
@@ -60,6 +57,13 @@ func (c *Category) BeforeSave(tx *gorm.DB) error {
 	}
 	if c.ID != dup.ID && dup.ID != 0 {
 		return ERROR_CATEGORY_NAME_NOT_UNIQUE
+	}
+	return nil
+}
+
+func (c *Category) AfterCreate(tx *gorm.DB) error {
+	if c.ParentID == c.ID {
+		return ERROR_CATEGORY_SELF_REFERENCING
 	}
 	return nil
 }
