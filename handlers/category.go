@@ -1,16 +1,23 @@
 package handlers
 
 import (
+	"fmt"
+
 	"git.qowevisa.me/Qowevisa/fin-check-api/db"
 	"git.qowevisa.me/Qowevisa/fin-check-api/types"
 	"github.com/gin-gonic/gin"
 )
 
 var categoryTransform func(*db.Category) types.DbCategory = func(inp *db.Category) types.DbCategory {
+	nameWithParent := inp.Name
+	if inp.Parent != nil {
+		nameWithParent = fmt.Sprintf("%s -> %s", inp.Parent.Name, inp.Name)
+	}
 	return types.DbCategory{
-		ID:       inp.ID,
-		Name:     inp.Name,
-		ParentID: inp.ParentID,
+		ID:             inp.ID,
+		Name:           inp.Name,
+		ParentID:       inp.ParentID,
+		NameWithParent: nameWithParent,
 	}
 }
 
@@ -50,7 +57,7 @@ func CategoryGetAll(c *gin.Context) {
 	}
 	dbc := db.Connect()
 	var entities []*db.Category
-	if err := dbc.Find(&entities, db.Category{UserID: userID}).Error; err != nil {
+	if err := dbc.Preload("Parent").Find(&entities, db.Category{UserID: userID}).Error; err != nil {
 		c.JSON(500, types.ErrorResponse{Message: err.Error()})
 		return
 	}
