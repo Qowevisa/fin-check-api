@@ -99,6 +99,7 @@ func main() {
 		expensesRoutes := api.Group("/expense", middleware.AuthMiddleware())
 		{
 			expensesRoutes.POST("/add", handlers.ExpenseAdd)
+			expensesRoutes.POST("/bulk_create", handlers.ExpenseBulkCreate)
 			expensesRoutes.GET("/:id", handlers.ExpenseGetId)
 			expensesRoutes.GET("/all", handlers.ExpenseGetAll)
 			expensesRoutes.PUT("/edit/:id", handlers.ExpensePutId)

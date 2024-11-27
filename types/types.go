@@ -87,6 +87,24 @@ type DbExpense struct {
 	ShowValue string `json:"show_value" example:"10.35$"`
 }
 
+type DbExpenseBulk struct {
+	PropagateCardID  bool        `json:"propagate_card_id" example:"false"`
+	CardID           uint        `json:"card_id" example:"1"`
+	PropagateTypeID  bool        `json:"propagate_type_id" example:"false"`
+	TypeID           uint        `json:"type_id" example:"1"`
+	PropagateValue   bool        `json:"propagate_value" example:"false"`
+	Value            uint64      `json:"value" example:"1025"`
+	PropagateComment bool        `json:"propagate_comment" example:"false"`
+	Comment          string      `json:"comment" example:"some comment"`
+	PropagateDate    bool        `json:"propagate_date" example:"false"`
+	Date             time.Time   `json:"date" example:"29/11/2001 12:00"`
+	Children         []DbExpense `json:"children"`
+}
+
+func (e DbExpenseBulk) IsEveryFieldPropagated() bool {
+	return e.PropagateCardID && e.PropagateTypeID && e.PropagateValue && e.PropagateComment && e.PropagateDate
+}
+
 type DbTransfer struct {
 	ID         uint      `json:"id" example:"1"`
 	FromCardID uint      `json:"from_card_id" example:"1"`

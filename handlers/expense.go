@@ -2,6 +2,7 @@ package handlers
 
 import (
 	"fmt"
+	"log"
 
 	"git.qowevisa.me/Qowevisa/fin-check-api/db"
 	"git.qowevisa.me/Qowevisa/fin-check-api/types"
@@ -101,6 +102,85 @@ func ExpenseAdd(c *gin.Context) {
 		dst.Comment = src.Comment
 		dst.Date = src.Date
 	})(c)
+}
+
+// @Summary Add many expenses
+// @Description Add expense by propagating main struct to every child in children field
+// @Tags expense
+// @Accept json
+// @Produce json
+// @Param Authorization header string true "Bearer token"
+// @Param expense body types.DbExpenseBulk true "Expense"
+// @Success 200 {object} types.Message
+// @Failure 400 {object} types.ErrorResponse
+// @Failure 500 {object} types.ErrorResponse
+// @Security ApiKeyAuth
+// @Router /expense/add [post]
+func ExpenseBulkCreate(c *gin.Context) {
+	userID, err := GetUserID(c)
+	if err != nil {
+		c.JSON(500, types.ErrorResponse{Message: err.Error()})
+		return
+	}
+
+	var u types.DbExpenseBulk
+	if err := c.ShouldBindJSON(&u); err != nil {
+		log.Printf("err is %v\n", err)
+		c.JSON(400, types.ErrorResponse{Message: "Invalid request"})
+		return
+	}
+	if u.IsEveryFieldPropagated() {
+		c.JSON(400, types.ErrorResponse{Message: "You can't just try to propagate every field for children."})
+		return
+	}
+	he := &db.Helper_ExpenseBulk{
+		PropagateCardID:  u.PropagateCardID,
+		CardID:           u.CardID,
+		PropagateTypeID:  u.PropagateTypeID,
+		TypeID:           u.TypeID,
+		PropagateValue:   u.PropagateValue,
+		Value:            u.Value,
+		PropagateComment: u.PropagateComment,
+		Comment:          u.Comment,
+		PropagateDate:    u.PropagateDate,
+		Date:             u.Date,
+		UserID:           userID,
+	}
+
+	var expenses []*db.Expense
+	for _, child := range u.Children {
+		c := db.Expense{
+			CardID:  child.CardID,
+			TypeID:  child.TypeID,
+			Value:   child.Value,
+			Comment: child.Comment,
+			Date:    child.Date,
+		}
+		expenses = append(expenses, he.CreateExpenseFromChild(c))
+	}
+
+	dbc := db.Connect()
+	var whatToRollback []*db.Expense
+	shouldRollback := false
+	defer func() {
+		if shouldRollback {
+			for _, e := range whatToRollback {
+				if err := dbc.Delete(e).Error; err != nil {
+					log.Printf("dbc.Delete ERROR: %v\n", err)
+				}
+			}
+		}
+	}()
+	for _, entity := range expenses {
+		if err := dbc.Create(entity).Error; err != nil {
+			shouldRollback = true
+			c.JSON(500, types.ErrorResponse{Message: err.Error()})
+			return
+		}
+		whatToRollback = append(whatToRollback, entity)
+	}
+
+	c.JSON(200, types.Message{Info: fmt.Sprintf("%d entities were created successfully!", len(expenses))})
 }
 
 // @Summary Edit expense by id

@@ -20,6 +20,66 @@ type Expense struct {
 	Type    *Type
 }
 
+type Helper_ExpenseBulk struct {
+	PropagateCardID  bool
+	CardID           uint
+	PropagateTypeID  bool
+	TypeID           uint
+	PropagateValue   bool
+	Value            uint64
+	PropagateComment bool
+	Comment          string
+	PropagateDate    bool
+	Date             time.Time
+	UserID           uint
+}
+
+func (he *Helper_ExpenseBulk) CreateExpenseFromChild(c Expense) *Expense {
+	var cardID uint
+	var typeID uint
+	var value uint64
+	var comment string
+	var date time.Time
+	if he.PropagateCardID {
+		cardID = he.CardID
+	} else {
+		cardID = c.CardID
+	}
+	if he.PropagateTypeID {
+		typeID = he.TypeID
+	} else {
+		typeID = c.TypeID
+	}
+	if he.PropagateValue {
+		value = he.Value
+	} else {
+		value = c.Value
+	}
+	if he.PropagateComment {
+		comment = he.Comment
+	} else {
+		comment = c.Comment
+	}
+	if he.PropagateValue {
+		value = he.Value
+	} else {
+		value = c.Value
+	}
+	if he.PropagateDate {
+		date = he.Date
+	} else {
+		date = c.Date
+	}
+	return &Expense{
+		CardID:  cardID,
+		TypeID:  typeID,
+		Value:   value,
+		Comment: comment,
+		Date:    date,
+		UserID:  he.UserID,
+	}
+}
+
 // Implements db.UserIdentifiable:1
 func (e Expense) GetID() uint {
 	return e.ID
