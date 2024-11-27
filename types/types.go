@@ -42,6 +42,8 @@ type DbCategory struct {
 	// Parent is used as a infinite sub-category structure
 	//  Can be 0
 	ParentID uint `json:"parent_id" example:"0"`
+	// Purely UI things
+	NameWithParent string `json:"name_with_parent" example:"World -> Moldova"`
 }
 
 type DbDebt struct {
