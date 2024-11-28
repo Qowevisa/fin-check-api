@@ -9,16 +9,33 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-var itemBoughtTransform func(inp *db.ItemBought) types.ItemBought = func(inp *db.ItemBought) types.ItemBought {
-	return types.ItemBought{}
+var itemBoughtTransform func(inp *db.ItemBought) types.DbItemBought = func(inp *db.ItemBought) types.DbItemBought {
+	var item types.DbItem
+	var price uint64 = 0
+	if inp.Item != nil {
+		item = itemTransform(inp.Item)
+		price = inp.Item.Price
+	}
+	return types.DbItemBought{
+		ID:          inp.ID,
+		ItemID:      inp.ItemID,
+		PaymentID:   inp.PaymentID,
+		TypeID:      inp.TypeID,
+		Price:       price,
+		Quantity:    inp.Quantity,
+		TotalCost:   inp.TotalCost,
+		MetricType:  inp.MetricType,
+		MetricValue: inp.MetricValue,
+		Item:        item,
+	}
 }
 
-var paymentTransform func(inp *db.Payment) types.Payment = func(inp *db.Payment) types.Payment {
-	var items []types.ItemBought
+var paymentTransform func(inp *db.Payment) types.DbPayment = func(inp *db.Payment) types.DbPayment {
+	var items []types.DbItemBought
 	for _, item := range inp.Items {
 		items = append(items, itemBoughtTransform(&item))
 	}
-	return types.Payment{
+	return types.DbPayment{
 		ID:          inp.ID,
 		CardID:      inp.CardID,
 		CategoryID:  inp.CategoryID,
@@ -36,7 +53,7 @@ var paymentTransform func(inp *db.Payment) types.Payment = func(inp *db.Payment)
 // @Accept json
 // @Produce json
 // @Param Authorization header string true "Bearer token"
-// @Param payment body types.Payment true "Payment"
+// @Param payment body types.DbPayment true "Payment"
 // @Success 200 {object} types.Message
 // @Failure 400 {object} types.ErrorResponse
 // @Failure 500 {object} types.ErrorResponse
@@ -49,7 +66,7 @@ func PaymentAdd(c *gin.Context) {
 		return
 	}
 
-	var updates types.Payment
+	var updates types.DbPayment
 	if err := c.ShouldBindJSON(&updates); err != nil {
 		log.Printf("err is %v\n", err)
 		c.JSON(400, types.ErrorResponse{Message: "Invalid request"})

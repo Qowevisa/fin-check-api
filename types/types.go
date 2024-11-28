@@ -155,18 +155,18 @@ type DbCurrency struct {
 	Symbol  string `json:"symbol" example:"$"`
 }
 
-type Payment struct {
-	ID          uint         `json:"id" example:"1"`
-	CardID      uint         `json:"card_id" example:"1"`
-	CategoryID  uint         `json:"category_id" example:"1"`
-	Title       string       `json:"title" example:"some title"`
-	Description string       `json:"descr" example:"i bought some title for 20$"`
-	Note        string       `json:"note" example:"no i did not hit domain"`
-	Date        time.Time    `json:"date" example:"29/11/2001 12:00"`
-	Items       []ItemBought `json:"items" example:"[]"`
+type DbPayment struct {
+	ID          uint           `json:"id" example:"1"`
+	CardID      uint           `json:"card_id" example:"1"`
+	CategoryID  uint           `json:"category_id" example:"1"`
+	Title       string         `json:"title" example:"some title"`
+	Description string         `json:"descr" example:"i bought some title for 20$"`
+	Note        string         `json:"note" example:"no i did not hit domain"`
+	Date        time.Time      `json:"date" example:"29/11/2001 12:00"`
+	Items       []DbItemBought `json:"items" example:"[]"`
 }
 
-type ItemBought struct {
+type DbItemBought struct {
 	ID          uint   `json:"id" example:"1"`
 	NewName     string `json:"new_name" example:"itemName"`
 	NewComment  string `json:"new_comment" example:"itemName"`
