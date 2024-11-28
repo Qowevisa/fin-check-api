@@ -34,6 +34,7 @@ type Helper_ExpenseBulk struct {
 	UserID           uint
 }
 
+// {{{ Helper_ExpenseBulk.CreateExpenseFromChild I'm not proud of this code
 func (he *Helper_ExpenseBulk) CreateExpenseFromChild(c Expense) *Expense {
 	var cardID uint
 	var typeID uint
@@ -79,6 +80,8 @@ func (he *Helper_ExpenseBulk) CreateExpenseFromChild(c Expense) *Expense {
 		UserID:  he.UserID,
 	}
 }
+
+// }}}
 
 // Implements db.UserIdentifiable:1
 func (e Expense) GetID() uint {
