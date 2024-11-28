@@ -178,4 +178,5 @@ type DbItemBought struct {
 	TotalCost   uint64 `json:"total_cost" example:"2050"`
 	MetricType  uint8  `json:"metric_type" example:"0"`
 	MetricValue uint64 `json:"metric_value" example:"100"`
+	Item        DbItem `json:"itme"`
 }
