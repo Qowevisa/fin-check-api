@@ -229,3 +229,33 @@ func PaymentAdd(c *gin.Context) {
 
 	c.JSON(200, types.Message{Info: fmt.Sprintf("Entity with %d ID is created successfully!", payment.ID)})
 }
+
+// @Summary Get all payments for user
+// @Description Get all payments for user
+// @Tags type
+// @Produce json
+// @Param Authorization header string true "Bearer token"
+// @Success 200 {object} []types.DbPayment
+// @Failure 401 {object} types.ErrorResponse
+// @Failure 500 {object} types.ErrorResponse
+// @Security ApiKeyAuth
+// @Router /payment/all [get]
+func PaymentGetAll(c *gin.Context) {
+	userID, err := GetUserID(c)
+	if err != nil {
+		c.JSON(500, types.ErrorResponse{Message: err.Error()})
+		return
+	}
+	dbc := db.Connect()
+	var entities []*db.Payment
+	if err := dbc.Preload("Items.Item").Find(&entities, db.Payment{UserID: userID}).Error; err != nil {
+		c.JSON(500, types.ErrorResponse{Message: err.Error()})
+		return
+	}
+
+	var ret []types.DbPayment
+	for _, entity := range entities {
+		ret = append(ret, paymentTransform(entity))
+	}
+	c.JSON(200, ret)
+}

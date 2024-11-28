@@ -127,6 +127,7 @@ func main() {
 		paymentRoutes := api.Group("/payment", middleware.AuthMiddleware())
 		{
 			paymentRoutes.POST("/add", handlers.PaymentAdd)
+			paymentRoutes.GET("/all", handlers.PaymentGetAll)
 		}
 		currencyRoutes := api.Group("/currency", middleware.AuthMiddleware())
 		{
