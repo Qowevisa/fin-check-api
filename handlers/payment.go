@@ -80,7 +80,7 @@ func PaymentAdd(c *gin.Context) {
 		if weNeedRollback {
 			dbc := db.Connect()
 			for _, deleteIt := range deletableIfRollback {
-				if err := dbc.Debug().Delete(deleteIt).Error; err != nil {
+				if err := dbc.Delete(deleteIt).Error; err != nil {
 					log.Printf("ERROR: dbc.Delete: %v\n", err)
 					continue
 				}
