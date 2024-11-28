@@ -99,7 +99,7 @@ func (e *Expense) SetUserID(id uint) {
 }
 
 var (
-	ERROR_EXPENSE_INVALID_USERID            = errors.New("Expense's `UserID` and Card's `UserID` are not equal")
+	ERROR_EXPENSE_INVALID_CARD_USERID       = errors.New("Expense's `UserID` and Card's `UserID` are not equal")
 	ERROR_EXPENSE_CARD_INSUFFICIENT_BALANCE = errors.New("Card's `Balance` is lower than Expense's Value")
 	ERROR_EXPENSE_INVALID_TYPE_USERID       = errors.New("Expense's `UserID` and Type's `UserID` are not equal")
 )
@@ -110,7 +110,7 @@ func (e *Expense) BeforeCreate(tx *gorm.DB) error {
 		return err
 	}
 	if card.UserID != e.UserID {
-		return ERROR_EXPENSE_INVALID_USERID
+		return ERROR_EXPENSE_INVALID_CARD_USERID
 	}
 	if card.Balance < e.Value {
 		return ERROR_EXPENSE_CARD_INSUFFICIENT_BALANCE
@@ -141,7 +141,7 @@ func (e *Expense) BeforeUpdate(tx *gorm.DB) (err error) {
 			return err
 		}
 		if oldCard.UserID != e.UserID {
-			return ERROR_EXPENSE_INVALID_USERID
+			return ERROR_EXPENSE_INVALID_CARD_USERID
 		}
 		oldCard.Balance += original.Value
 		if err := tx.Save(oldCard).Error; err != nil {
@@ -155,7 +155,7 @@ func (e *Expense) BeforeUpdate(tx *gorm.DB) (err error) {
 			return err
 		}
 		if newCard.UserID != e.UserID {
-			return ERROR_EXPENSE_INVALID_USERID
+			return ERROR_EXPENSE_INVALID_CARD_USERID
 		}
 		if newCard.Balance < e.Value {
 			return ERROR_EXPENSE_CARD_INSUFFICIENT_BALANCE
@@ -181,7 +181,7 @@ func (e *Expense) AfterDelete(tx *gorm.DB) (err error) {
 		return err
 	}
 	if card.UserID != e.UserID {
-		return ERROR_EXPENSE_INVALID_USERID
+		return ERROR_EXPENSE_INVALID_CARD_USERID
 	}
 	card.Balance += e.Value
 	if err := tx.Save(card).Error; err != nil {
