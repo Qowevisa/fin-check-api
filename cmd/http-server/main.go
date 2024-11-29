@@ -133,6 +133,10 @@ func main() {
 		{
 			currencyRoutes.GET("/all", handlers.CurrencyGetAll)
 		}
+		statisticRoute := api.Group("/statistics", middleware.AuthMiddleware())
+		{
+			statisticRoute.GET("/type", handlers.StatisticsGetAllSpendingsForTypes)
+		}
 	}
 
 	r.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
