@@ -180,3 +180,20 @@ type DbItemBought struct {
 	MetricValue uint64 `json:"metric_value" example:"100"`
 	Item        DbItem `json:"itme"`
 }
+
+// User Spendings that are connected by types:
+//
+//	-- DbExpense
+//	-- DbItemBought -> DbItem
+type StatsType struct {
+	Value uint64 `json:"value" example:"20015"`
+	Name  string `json:"name" example:"Meat"`
+	Color string `json:"color" example:"#1e2e3e"`
+}
+
+// Contains a number of StatsType
+// StatsTypeCurrencyChart is like a struct for chart with specific Currency bound
+type StatsTypeCurrencyChart struct {
+	CurrencyLabel string      `json:"label" example:"$ (USD)"`
+	Elements      []StatsType `json:"elements"`
+}
