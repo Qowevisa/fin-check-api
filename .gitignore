@@ -26,4 +26,6 @@ gonuts
 bin*
 *.log
 
+*.bak
+
 docs/
