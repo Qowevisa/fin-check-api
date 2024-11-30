@@ -137,6 +137,14 @@ func main() {
 		{
 			statisticRoute.GET("/type", handlers.StatisticsGetAllSpendingsForTypes)
 		}
+		settingsGroup := api.Group("/settings", middleware.AuthMiddleware())
+		{
+			typeRoutes := settingsGroup.Group("/type")
+			{
+				typeRoutes.GET("/all", handlers.SettingsTypeFilterGetAll)
+				typeRoutes.PUT("/update", handlers.SettingsTypePutBatch)
+			}
+		}
 	}
 
 	r.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
