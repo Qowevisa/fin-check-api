@@ -9,13 +9,15 @@ import (
 	"git.qowevisa.me/Qowevisa/fin-check-api/db"
 )
 
+const SESSION_DURATION = 24 * time.Hour
+
 func CreateSessionFromToken(token string, userID uint) error {
 	sessionID := getSessionIDFromToken(token)
 	dbc := db.Connect()
 	session := &db.Session{
 		ID:       string(sessionID),
 		UserID:   userID,
-		ExpireAt: time.Now().Add(time.Hour),
+		ExpireAt: time.Now().Add(SESSION_DURATION),
 	}
 	if err := dbc.Create(session).Error; err != nil {
 		return err
