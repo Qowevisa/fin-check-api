@@ -147,6 +147,6 @@ func main() {
 		c.Redirect(301, "/swagger/index.html")
 	})
 
-	go tokens.StartTokens()
+	tokens.Init()
 	r.Run("127.0.0.1:3000")
 }

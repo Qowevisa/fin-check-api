@@ -2,10 +2,10 @@ package middleware
 
 import (
 	"errors"
-	"log"
 	"net/http"
 
 	"git.qowevisa.me/Qowevisa/fin-check-api/consts"
+	"git.qowevisa.me/Qowevisa/fin-check-api/db"
 	"git.qowevisa.me/Qowevisa/fin-check-api/tokens"
 	"git.qowevisa.me/Qowevisa/fin-check-api/types"
 	"github.com/gin-gonic/gin"
@@ -20,17 +20,13 @@ func AuthMiddleware() gin.HandlerFunc {
 			c.Abort()
 			return
 		}
-		if !tokens.ValidateSessionToken(token) {
+		var session *db.Session
+		if validated, tmpSession := tokens.ValidateAndGetSessionToken(token); !validated {
 			c.JSON(401, types.ErrorResponse{Message: "Invalid authorization cookie"})
 			c.Abort()
 			return
-		}
-		session, err := tokens.GetSession(token)
-		if err != nil {
-			log.Printf("ERROR: tokens.GetSession: %v\n", err)
-			c.JSON(500, types.ErrorResponse{Message: "Server error"})
-			c.Abort()
-			return
+		} else {
+			session = tmpSession
 		}
 		c.Set("UserID", session.UserID)
 

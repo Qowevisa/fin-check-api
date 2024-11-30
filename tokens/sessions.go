@@ -3,13 +3,14 @@ package tokens
 import (
 	"crypto/sha256"
 	"encoding/base64"
+	"errors"
 	"log"
 	"time"
 
 	"git.qowevisa.me/Qowevisa/fin-check-api/db"
 )
 
-const SESSION_DURATION = 24 * time.Hour
+const SESSION_DURATION = (24 * time.Hour)
 
 func CreateSessionFromToken(token string, userID uint) error {
 	sessionID := getSessionIDFromToken(token)
@@ -19,36 +20,37 @@ func CreateSessionFromToken(token string, userID uint) error {
 		UserID:   userID,
 		ExpireAt: time.Now().Add(SESSION_DURATION),
 	}
+	sessionCache.AddSession(session)
 	if err := dbc.Create(session).Error; err != nil {
 		return err
 	}
 	return nil
 }
 
-func ValidateSessionToken(token string) bool {
+func ValidateAndGetSessionToken(token string) (bool, *db.Session) {
 	sessionID := getSessionIDFromToken(token)
 	dbc := db.Connect()
-	session := &db.Session{}
-	if err := dbc.Find(session, db.Session{ID: sessionID}).Error; err != nil {
-		log.Printf("DBERROR: %v\n", err)
-		return false
-	}
-	if session.ID == "" {
-		return false
+	session := sessionCache.GetSession(sessionID)
+	if session == nil || session.ID == "" {
+		log.Printf("Internal error TOKENS.SESSIONS.ValidateSessionToken.1\n")
+		return false, nil
 	}
 	if session.ExpireAt.Unix() < time.Now().Unix() {
 		dbc.Unscoped().Delete(session)
-		return false
+		return false, nil
 	}
-	return session.ID != ""
+	return session.ID != "", session
 }
+
+var (
+	ERROR_SESSION_NOT_FOUND = errors.New("Can't find session with this token")
+)
 
 func GetSession(token string) (*db.Session, error) {
 	sessionID := getSessionIDFromToken(token)
-	dbc := db.Connect()
-	session := &db.Session{}
-	if err := dbc.Find(session, db.Session{ID: sessionID}).Error; err != nil {
-		return nil, err
+	session := sessionCache.GetSession(sessionID)
+	if session == nil {
+		return nil, ERROR_SESSION_NOT_FOUND
 	}
 	return session, nil
 }
