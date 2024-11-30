@@ -10,7 +10,8 @@ import (
 	"git.qowevisa.me/Qowevisa/fin-check-api/db"
 )
 
-const SESSION_DURATION = (24 * time.Hour)
+const SESSION_DURATION_IN_SECONDS = 3600
+const SESSION_DURATION = (SESSION_DURATION_IN_SECONDS * time.Second)
 
 func CreateSessionFromToken(token string, userID uint) error {
 	sessionID := getSessionIDFromToken(token)
