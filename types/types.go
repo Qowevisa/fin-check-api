@@ -197,3 +197,11 @@ type StatsTypeCurrencyChart struct {
 	CurrencyLabel string      `json:"label" example:"$ (USD)"`
 	Elements      []StatsType `json:"elements"`
 }
+
+// {{{ Settings section
+type SettingsTypeFilter struct {
+	TypeID     uint `json:"type_id" example:"1"`
+	FilterThis bool `json:"filter_this" example:"true"`
+}
+
+// }}}
