@@ -72,6 +72,7 @@ func Connect() *gorm.DB {
 	gormDB.AutoMigrate(&Metric{})
 	gormDB.AutoMigrate(&Currency{})
 	gormDB.AutoMigrate(&ExchangeRate{})
+	gormDB.AutoMigrate(&SettingsTypeFilter{})
 	return newUDB
 }
 
