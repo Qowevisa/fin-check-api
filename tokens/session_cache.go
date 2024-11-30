@@ -33,7 +33,6 @@ func Init() error {
 	if err := db.Connect().Find(&dbSessions).Error; err != nil {
 		return err
 	}
-	log.Printf("you what len(dbSessions) = %d", len(dbSessions))
 	for _, dbSession := range dbSessions {
 		sessionCache.SessionMap[dbSession.ID] = dbSession
 	}
@@ -43,8 +42,7 @@ func Init() error {
 
 func (s *SessiomMapMu) HaveSession(sessionID string) bool {
 	s.Mu.RLock()
-	val, exists := s.SessionMap[sessionID]
-	log.Printf("HaveSession s.SessionMap[sessionID] = %v | %b\n", val, exists)
+	_, exists := s.SessionMap[sessionID]
 	s.Mu.RUnlock()
 	return exists
 }
@@ -52,14 +50,12 @@ func (s *SessiomMapMu) HaveSession(sessionID string) bool {
 func (s *SessiomMapMu) AddSession(session *db.Session) {
 	s.Mu.Lock()
 	s.SessionMap[session.ID] = session
-	log.Printf("AddSession s.SessionMap[sessionID] = %v \n", session)
 	s.Mu.Unlock()
 }
 
 func (s *SessiomMapMu) GetSession(sessionID string) *db.Session {
 	s.Mu.RLock()
 	val, exists := s.SessionMap[sessionID]
-	log.Printf("GetSession s.SessionMap[sessionID] = %v | %b\n", val, exists)
 	s.Mu.RUnlock()
 	if !exists {
 		return nil
@@ -70,7 +66,7 @@ func (s *SessiomMapMu) GetSession(sessionID string) *db.Session {
 func generateRandomString(length int) string {
 	bytes := make([]byte, length)
 	if _, err := rand.Read(bytes); err != nil {
-		log.Printf("generateRandomString: %v", err)
+		log.Printf("generateRandomString ERROR: %v", err)
 	}
 	return base64.URLEncoding.EncodeToString(bytes)
 }
