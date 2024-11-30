@@ -27,13 +27,22 @@ func StatisticsGetAllSpendingsForTypes(c *gin.Context) {
 		return
 	}
 	dbc := db.Connect()
+	var settingsTypeFilter []*db.SettingsTypeFilter
+	if err := dbc.Find(&settingsTypeFilter, db.SettingsTypeFilter{UserID: userID}).Error; err != nil {
+		c.JSON(500, types.ErrorResponse{Message: err.Error()})
+		return
+	}
+	var filerTypeIDs []uint
+	for _, typeFilter := range settingsTypeFilter {
+		filerTypeIDs = append(filerTypeIDs, typeFilter.TypeID)
+	}
 	var userTypes []*db.Type
 	if err := dbc.Find(&userTypes, db.Type{UserID: userID}).Error; err != nil {
 		c.JSON(500, types.ErrorResponse{Message: err.Error()})
 		return
 	}
 	var userExpenses []*db.Expense
-	if err := dbc.Preload("Card.Currency").Find(&userExpenses, db.Expense{UserID: userID}).Error; err != nil {
+	if err := dbc.Not(map[string]interface{}{"type_id": filerTypeIDs}).Preload("Card.Currency").Find(&userExpenses, db.Expense{UserID: userID}).Error; err != nil {
 		c.JSON(500, types.ErrorResponse{Message: err.Error()})
 		return
 	}
