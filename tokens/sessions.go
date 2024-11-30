@@ -37,7 +37,7 @@ func ValidateSessionToken(token string) bool {
 		return false
 	}
 	if session.ExpireAt.Unix() < time.Now().Unix() {
-		dbc.Delete(session)
+		dbc.Unscoped().Delete(session)
 		return false
 	}
 	return session.ID != ""
