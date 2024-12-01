@@ -4,7 +4,7 @@ import "gorm.io/gorm"
 
 type Metric struct {
 	gorm.Model
-	Value uint8
+	Type  uint8
 	Name  string
 	Short string
 }

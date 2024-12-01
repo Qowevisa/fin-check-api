@@ -143,7 +143,7 @@ type DbItemSearch struct {
 }
 
 type DbMetric struct {
-	Value uint8  `json:"value" example:"1"`
+	Type  uint8  `json:"type" example:"1"`
 	Name  string `json:"name" example:"Kilogram"`
 	Short string `json:"short" example:"kg"`
 }

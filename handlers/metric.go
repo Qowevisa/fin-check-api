@@ -8,7 +8,7 @@ import (
 
 var metricTransform func(inp *db.Metric) types.DbMetric = func(inp *db.Metric) types.DbMetric {
 	return types.DbMetric{
-		Value: inp.Value,
+		Type:  inp.Type,
 		Name:  inp.Name,
 		Short: inp.Short,
 	}
