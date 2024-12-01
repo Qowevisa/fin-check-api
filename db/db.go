@@ -107,10 +107,10 @@ func checkSeededValues[T Identifiable](whatToCheck []*T, errorIfNotFound error, 
 
 func initMetrics(tx *gorm.DB) error {
 	metricsThatNeeded := []*Metric{
-		&Metric{Name: "None", Short: "pcs", Value: 0},
-		&Metric{Name: "Gram", Short: "g", Value: 1},
-		&Metric{Name: "Kilogram", Short: "kg", Value: 2},
-		&Metric{Name: "Liter", Short: "l", Value: 3},
+		&Metric{Name: "None", Short: "pcs", Value: METRIC_VALUE_NONE},
+		&Metric{Name: "Gram", Short: "g", Value: METRIC_VALUE_GRAM},
+		&Metric{Name: "Kilogram", Short: "kg", Value: METRIC_VALUE_KILOGRAM},
+		&Metric{Name: "Liter", Short: "l", Value: METRIC_VALUE_LITER},
 	}
 	return checkSeededValues(metricsThatNeeded, CANT_FIND_METRIC, tx)
 }
