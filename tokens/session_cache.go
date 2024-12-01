@@ -30,10 +30,18 @@ var sessionCache SessiomMapMu
 func Init() error {
 	sessionCache.SessionMap = make(map[string]*db.Session)
 	var dbSessions []*db.Session
-	if err := db.Connect().Find(&dbSessions).Error; err != nil {
+	dbc := db.Connect()
+	if err := dbc.Find(&dbSessions).Error; err != nil {
 		return err
 	}
+	timeNow := time.Now()
 	for _, dbSession := range dbSessions {
+		if dbSession.ExpireAt.Unix() < timeNow.Unix() {
+			if err := dbc.Unscoped().Delete(dbSession).Error; err != nil {
+				log.Printf("dbc.Unscoped().Delete(dbSession) error: %v\n", err)
+			}
+			continue
+		}
 		sessionCache.SessionMap[dbSession.ID] = dbSession
 	}
 	sessionCache.Initialized = true
