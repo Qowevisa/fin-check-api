@@ -77,7 +77,8 @@ func Connect() *gorm.DB {
 }
 
 var (
-	CANT_FIND_METRIC = errors.New("Can't find proper metrics in database")
+	CANT_FIND_METRIC   = errors.New("Can't find proper metrics in database")
+	CANT_FIND_CURRENCY = errors.New("Can't find proper currencies in database")
 )
 
 func checkSeededValues[T Identifiable](whatToCheck []*T, errorIfNotFound error, tx *gorm.DB) error {
@@ -127,7 +128,7 @@ func initCurrencies(tx *gorm.DB) error {
 		{Name: "Kazakhstani Tenge", Symbol: "₸", ISOName: "KZT"},
 		{Name: "Chinese Yuan", Symbol: "¥", ISOName: "CNY"},
 	}
-	return checkSeededValues(currsThatNeeded, CANT_FIND_METRIC, tx)
+	return checkSeededValues(currsThatNeeded, CANT_FIND_CURRENCY, tx)
 }
 
 func initStateOfDb(tx *gorm.DB) error {
