@@ -196,6 +196,7 @@ type StatsType struct {
 type StatsTypeCurrencyChart struct {
 	CurrencyLabel string      `json:"label" example:"$ (USD)"`
 	Elements      []StatsType `json:"elements"`
+	Total         uint64      `json:"total" example:"120050"`
 }
 
 // {{{ Settings section

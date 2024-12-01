@@ -7,6 +7,7 @@ import (
 
 	"git.qowevisa.me/Qowevisa/fin-check-api/db"
 	"git.qowevisa.me/Qowevisa/fin-check-api/types"
+	"git.qowevisa.me/Qowevisa/fin-check-api/utils"
 	"github.com/gin-gonic/gin"
 )
 
@@ -85,14 +86,20 @@ func StatisticsGetAllSpendingsForTypes(c *gin.Context) {
 				typeToValue[expense.TypeID] = val
 			}
 		}
+		var sum uint64 = 0
 		var elements []types.StatsType
 		for _, val := range typeToValue {
 			elements = append(elements, val)
+			sum += val.Value
 		}
+		slices.SortFunc(elements, func(a, b types.StatsType) int {
+			return utils.DescendingSort(a.Value, b.Value)
+		})
 
 		ret = append(ret, types.StatsTypeCurrencyChart{
 			CurrencyLabel: fmt.Sprintf("%s (%s)", currency.Symbol, currency.ISOName),
 			Elements:      elements,
+			Total:         sum,
 		})
 	}
 	c.JSON(200, ret)
